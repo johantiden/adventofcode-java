@@ -6,56 +6,55 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
-import java.util.function.Consumer;
 
 public class Three {
 
 
     static Position findClosestIntersection(String wire1, String wire2) {
-        List<Position> wire1Steps = walk(wire1);
-        List<Position> intersections = walkAndCollectIntersections(wire2, wire1Steps);
+        List<Step> wire1Steps = walk(wire1);
+        List<Step> wire2Steps = walk(wire2);
+        List<Pair<Step, Step>> intersections = findIntersections(wire1Steps, wire2Steps);
 
-        Position closest = findClosestIntersection(intersections);
+        Comparator<Pair<Step, Step>> comparator = Comparator.comparing(Three::manhattanDistance);
+        Pair<Step, Step> closest = findFirst(intersections, comparator);
+        return closest.a.position;
+    }
+
+    static Pair<Step, Step> findShortestIntersection(String wire1, String wire2) {
+        List<Step> wire1Steps = walk(wire1);
+        List<Step> wire2Steps = walk(wire2);
+        List<Pair<Step, Step>> intersections = findIntersections(wire1Steps, wire2Steps);
+
+        Comparator<Pair<Step, Step>> comparator = Comparator.comparing(Three::asdf);
+        Pair<Step, Step> closest = findFirst(intersections, comparator);
         return closest;
     }
 
-    private static Position findClosestIntersection(List<Position> intersections) {
-        Comparator<Position> comparator = Comparator.comparing(Three::distance);
+    private static Pair<Step, Step> findFirst(List<Pair<Step, Step>> intersections, Comparator<Pair<Step, Step>> comparator) {
         return intersections.stream()
                 .min(comparator)
                 .orElseThrow(() -> new RuntimeException("There was no first!"));
     }
 
 
+    private static List<Pair<Step, Step>> findIntersections(List<Step> wire1Steps,  List<Step> wire2Steps) {
+        List<Pair<Step, Step>> intersections = new ArrayList<>();
 
-
-    private static List<Position> walkAndCollectIntersections(String wire2, List<Position> wire1Steps) {
-        List<Position> intersections = new ArrayList<>();
-
-        List<Position> wire2Steps = walk(wire2);
-
-        wire2Steps.forEach(p -> {
-            if (wire1Steps.contains(p)) {
-                intersections.add(p);
+        for (Step wire1Step : wire1Steps) {
+            for (Step wire2Step : wire2Steps) {
+                if (wire1Step.position.equals(wire2Step.position)) {
+                    intersections.add(new Pair<>(wire1Step, wire2Step));
+                }
             }
-        });
+        }
+
+
         return intersections;
     }
 
-
-    private static void walkAndPaint(String wire1, SparseBitmap sparseBitmap) {
-        walkAnd(wire1, p -> sparseBitmap.put(p, true));
-
-    }
-
-    private static void walkAnd(String wire, Consumer<Position> then) {
-        List<Position> steps = walk(wire);
-        steps.forEach(then);
-    }
-
-    private static List<Position> walk(String wire) {
-        List<Position> steps = new ArrayList<>();
-        Position position = Position.ZERO;
+    private static List<Step> walk(String wire) {
+        List<Step> steps = new ArrayList<>();
+        Step step = Step.ZERO;
 
         String[] words = wire.split(",");
         for (String word : words) {
@@ -66,9 +65,10 @@ public class Three {
 
 
             for (int i = 0; i < length; i++) {
-                Position newPosition = new Position(position.x + dx, position.y + dy);
-                steps.add(newPosition);
-                position = newPosition;
+                Position newPosition = new Position(step.position.x + dx, step.position.y + dy);
+                Step newStep = new Step(step.stepCount + 1, newPosition);
+                steps.add(newStep);
+                step = newStep;
             }
         }
 
@@ -92,20 +92,37 @@ public class Three {
     }
 
 
-    public static int distance(Position closest) {
-        return Math.abs(closest.x) + Math.abs(closest.y);
+    public static int manhattanDistance(Pair<Step, Step> intersection) {
+        assert intersection.a.position.equals(intersection.b.position);
+        return Math.abs(intersection.a.position.x) + Math.abs(intersection.a.position.y);
     }
 
+    public static int manhattanDistance(Position intersection) {
+        return Math.abs(intersection.x) + Math.abs(intersection.y);
+    }
 
-    private static class SparseBitmap {
-        private final Map<Position, Boolean> bitmap = new HashMap<>();
+    public static int asdf(Pair<Step, Step> intersection) {
+        return intersection.a.stepCount + intersection.b.stepCount;
+    }
 
-        public void put(Position p, boolean value) {
-            bitmap.put(p, value);
+    static class Pair<A, B> {
+        final A a;
+        final B b;
+
+        Pair(A a, B b) {
+            this.a = a;
+            this.b = b;
         }
+    }
 
-        public boolean get(Position p) {
-            return bitmap.getOrDefault(p, false);
+    static class Step {
+        public static final Step ZERO = new Step(0, Position.ZERO);
+        final int stepCount;
+        final Position position;
+
+        Step(int stepCount, Position position) {
+            this.stepCount = stepCount;
+            this.position = position;
         }
     }
 
