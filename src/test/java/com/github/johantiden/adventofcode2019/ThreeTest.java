@@ -73,6 +73,7 @@ public class ThreeTest {
         assertEquals(410, actual);
     }
 
+    @Ignore("takes too long")
     @Test
     public void realPartTwo() {
         Three.Pair<Three.Step, Three.Step> shortest = Three.findShortestIntersection(

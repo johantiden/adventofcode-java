@@ -11,13 +11,14 @@ public class Two {
         memory[1] = 12;
         memory[2] = 2;
 
-        IntcodeComputer.run(memory);
+
+
+        new IntcodeComputer(new IntcodeComputer.Memory(memory), null, null).run();
         System.out.println(memory[0]);
     }
 
     static class PartTwo {
         public static void main(String[] args) {
-
 
 
             for (int noun = 0; noun < 99; noun++) {
@@ -27,7 +28,7 @@ public class Two {
                     memory[1] = noun;
                     memory[2] = verb;
 
-                    IntcodeComputer.run(memory);
+                    new IntcodeComputer(new IntcodeComputer.Memory(memory), null, null).run();
                     int response = memory[0];
                     if (response == 19690720) {
                         System.out.println(noun + " " + verb);

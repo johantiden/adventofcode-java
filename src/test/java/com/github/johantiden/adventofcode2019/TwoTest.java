@@ -6,6 +6,6 @@ public class TwoTest {
 
     @Test
     public void testRun() {
-        IntcodeComputer.run(new int[]{1,9,10,3,2,3,11,0,99,30,40,50});
+        new IntcodeComputer(new IntcodeComputer.Memory(new int[]{1,9,10,3,2,3,11,0,99,30,40,50}), null, null).run();
     }
 }
