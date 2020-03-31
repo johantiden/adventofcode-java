@@ -1,8 +1,6 @@
 package com.github.johantiden.adventofcode2019;
 
 
-import jdk.internal.util.xml.impl.Input;
-
 public class IntcodeComputer {
     private static final boolean DEBUG_VERBOSE = false;
 
