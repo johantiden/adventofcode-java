@@ -8,20 +8,13 @@ import java.util.List;
 import java.util.Set;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
-import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.atomic.AtomicLong;
 
 public class Seven {
 
 
-    public static void main(String[] args) {
-
-
-
-
-    }
-
-    static int findBest(int[] program) {
-        int max = -1;
+    static long findBest(long[] program) {
+        long max = -1;
 
         for (int a = 0; a < 5; a++) {
             for (int b = 0; b < 5; b++) {
@@ -30,7 +23,7 @@ public class Seven {
                         for (int e = 0; e < 5; e++) {
                             ArrayList<Integer> phases = Lists.newArrayList(a, b, c, d, e);
                             if (isValid(phases)) {
-                                int output = calculateValueForPhase(program, phases);
+                                long output = calculateValueForPhase(program, phases);
                                 if (output > max) {
                                     max = output;
                                 }
@@ -45,9 +38,9 @@ public class Seven {
 
     }
 
-    static int findBestPartTwo(int[] program) throws InterruptedException {
+    static long findBestPartTwo(long[] program) throws InterruptedException {
 
-        int max = -1;
+        long max = -1;
 
         for (int a = 5; a < 10; a++) {
             for (int b = 5; b < 10; b++) {
@@ -56,7 +49,7 @@ public class Seven {
                         for (int e = 5; e < 10; e++) {
                             ArrayList<Integer> phases = Lists.newArrayList(a, b, c, d, e);
                             if (isValid(phases)) {
-                                int output = calculateValueForPhaseWithFeedbackLoop(program, phases);
+                                long output = calculateValueForPhaseWithFeedbackLoop(program, phases);
                                 if (output > max) {
                                     max = output;
                                 }
@@ -77,7 +70,7 @@ public class Seven {
     }
 
 
-    private static int calculateValueForPhase(int[] program, List<Integer> phases) {
+    private static long calculateValueForPhase(long[] program, List<Integer> phases) {
 
         Pipe input = new Pipe();
         Pipe ab = new Pipe();
@@ -93,24 +86,24 @@ public class Seven {
 
         input.write(0);
 
-        AtomicInteger outputValue = new AtomicInteger();
+        AtomicLong outputValue = new AtomicLong();
         IntcodeComputer.Output output = outputValue::set;
 
-        IntcodeComputer a = new IntcodeComputer(new IntcodeComputer.Memory(program.clone()), input, ab);
+        IntcodeComputer a = new IntcodeComputer(IntcodeComputer.Memory.of(program), input, ab);
         a.run();
-        IntcodeComputer b = new IntcodeComputer(new IntcodeComputer.Memory(program.clone()), ab, bc);
+        IntcodeComputer b = new IntcodeComputer(IntcodeComputer.Memory.of(program), ab, bc);
         b.run();
-        IntcodeComputer c = new IntcodeComputer(new IntcodeComputer.Memory(program.clone()), bc, cd);
+        IntcodeComputer c = new IntcodeComputer(IntcodeComputer.Memory.of(program), bc, cd);
         c.run();
-        IntcodeComputer d = new IntcodeComputer(new IntcodeComputer.Memory(program.clone()), cd, de);
+        IntcodeComputer d = new IntcodeComputer(IntcodeComputer.Memory.of(program), cd, de);
         d.run();
-        IntcodeComputer e = new IntcodeComputer(new IntcodeComputer.Memory(program.clone()), de, output);
+        IntcodeComputer e = new IntcodeComputer(IntcodeComputer.Memory.of(program), de, output);
         e.run();
 
         return outputValue.get();
     }
 
-    private static int calculateValueForPhaseWithFeedbackLoop(int[] program, List<Integer> phases) throws InterruptedException {
+    private static long calculateValueForPhaseWithFeedbackLoop(long[] program, List<Integer> phases) throws InterruptedException {
 
         Pipe ab = new Pipe();
         Pipe bc = new Pipe();
@@ -126,11 +119,11 @@ public class Seven {
 
         ea.write(0);
 
-        IntcodeComputer a = new IntcodeComputer(new IntcodeComputer.Memory(program.clone()), ea, ab);
-        IntcodeComputer b = new IntcodeComputer(new IntcodeComputer.Memory(program.clone()), ab, bc);
-        IntcodeComputer c = new IntcodeComputer(new IntcodeComputer.Memory(program.clone()), bc, cd);
-        IntcodeComputer d = new IntcodeComputer(new IntcodeComputer.Memory(program.clone()), cd, de);
-        IntcodeComputer e = new IntcodeComputer(new IntcodeComputer.Memory(program.clone()), de, ea);
+        IntcodeComputer a = new IntcodeComputer(IntcodeComputer.Memory.of(program), ea, ab);
+        IntcodeComputer b = new IntcodeComputer(IntcodeComputer.Memory.of(program), ab, bc);
+        IntcodeComputer c = new IntcodeComputer(IntcodeComputer.Memory.of(program), bc, cd);
+        IntcodeComputer d = new IntcodeComputer(IntcodeComputer.Memory.of(program), cd, de);
+        IntcodeComputer e = new IntcodeComputer(IntcodeComputer.Memory.of(program), de, ea);
 
         new Thread(d::run).start();
         new Thread(c::run).start();
@@ -138,22 +131,22 @@ public class Seven {
         new Thread(a::run).start();
         e.run(); // blocking
 
-        int output = ea.read();
+        long output = ea.read();
         return output;
     }
 
 
     static class Pipe implements IntcodeComputer.Input, IntcodeComputer.Output{
 
-        private final BlockingQueue<Integer> buffer = new LinkedBlockingQueue<>();
+        private final BlockingQueue<Long> buffer = new LinkedBlockingQueue<>();
 
         @Override
-        public int read() throws InterruptedException {
+        public long read() throws InterruptedException {
             return buffer.take();
         }
 
         @Override
-        public void write(int output) {
+        public void write(long output) {
             buffer.offer(output);
         }
     }

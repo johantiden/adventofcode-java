@@ -1,9 +1,13 @@
 package com.github.johantiden.adventofcode2019;
 
 
-public class IntcodeComputer {
-    private static final boolean DEBUG_VERBOSE = false;
+import java.util.HashMap;
+import java.util.Map;
 
+public class IntcodeComputer {
+    private static final boolean DEBUG_VERBOSE = true;
+
+    private long relativeBase;
     private final Memory memory;
     private final Input input;
     private final Output output;
@@ -12,6 +16,10 @@ public class IntcodeComputer {
         this.memory = memory;
         this.input = input;
         this.output = output;
+    }
+
+    public static IntcodeComputer of(long[] memory, Input input, Output output) {
+        return new IntcodeComputer(Memory.of(memory), input, output);
     }
 
     void run() {
@@ -28,7 +36,7 @@ public class IntcodeComputer {
     }
 
     private Memory.Address runOneInstruction(Memory.Address instructionPointer) {
-        int opcode = instructionPointer.read() % 100;
+        int opcode = (int) (instructionPointer.read() % 100);
         switch (opcode) {
             case 1:
                 return _1add(instructionPointer);
@@ -46,6 +54,8 @@ public class IntcodeComputer {
                 return _7lessThan(instructionPointer);
             case 8:
                 return _8equals2(instructionPointer);
+            case 9:
+                return _9offsetRelativeBase(instructionPointer);
             case 99:
                 if (DEBUG_VERBOSE) {
                     System.out.println("99 at address " + instructionPointer + ", exiting...");
@@ -56,12 +66,22 @@ public class IntcodeComputer {
         }
     }
 
+    private Memory.Address _9offsetRelativeBase(Memory.Address instructionPointer) {
+        Param param1 = parseParameter(instructionPointer, 1);
+        long value = param1.getValue();
+        if (DEBUG_VERBOSE) {
+            System.out.println("9: offsetRelativeBase with " + param1 + " to " + (relativeBase+value));
+        }
+        relativeBase += value;
+        return memory.offset(instructionPointer, 2);
+    }
+
     private Memory.Address _8equals2(Memory.Address instructionPointer) {
         Param param1 = parseParameter(instructionPointer, 1);
         Param param2 = parseParameter(instructionPointer, 2);
         Param param3 = parseParameter(instructionPointer, 3);
 
-        int output;
+        long output;
         boolean result = param1.getValue() == param2.getValue();
         if (result) {
             output = 1;
@@ -83,7 +103,7 @@ public class IntcodeComputer {
         Param param2 = parseParameter(instructionPointer, 2);
         Param param3 = parseParameter(instructionPointer, 3);
 
-        int output;
+        long output;
         boolean result = param1.getValue() < param2.getValue();
         if (result) {
             output = 1;
@@ -139,7 +159,7 @@ public class IntcodeComputer {
 
     private Memory.Address _4output(Memory.Address instructionPointer) {
         Param param1 = parseParameter(instructionPointer, 1);
-        int value = param1.getValue();
+        long value = param1.getValue();
         if (DEBUG_VERBOSE) {
             System.out.println("4: output " + param1);
         }
@@ -150,7 +170,7 @@ public class IntcodeComputer {
     private Memory.Address _3readInput(Memory.Address instructionPointer) {
         Param param1 = parseParameter(instructionPointer, 1);
 
-        Integer argument = null;
+        long argument;
         try {
             argument = input.read();
         } catch (InterruptedException e) {
@@ -172,10 +192,10 @@ public class IntcodeComputer {
         Param param2 = parseParameter(instructionPointer, 2);
         Param param3 = parseParameter(instructionPointer, 3);
 
-        int a = param1.getValue();
-        int b = param2.getValue();
+        long a = param1.getValue();
+        long b = param2.getValue();
 
-        int result = a * b;
+        long result = a * b;
         if (DEBUG_VERBOSE) {
             System.out.println("2: Multiply " + param1 + "*" + param2 + " = " + result+ ". Saving to " + param3);
         }
@@ -189,10 +209,10 @@ public class IntcodeComputer {
         Param param2 = parseParameter(instructionPointer, 2);
         Param param3 = parseParameter(instructionPointer, 3);
 
-        int a = param1.getValue();
-        int b = param2.getValue();
+        long a = param1.getValue();
+        long b = param2.getValue();
 
-        int result = a + b;
+        long result = a + b;
 
         if (DEBUG_VERBOSE) {
             System.out.println("1: Add " + param1 + "+" + param2 + " = " + result+ ". Saving to " + param3);
@@ -203,28 +223,28 @@ public class IntcodeComputer {
     }
 
     Param parseParameter(Memory.Address instructionPointer, int offset) {
-        int instruction = instructionPointer.read();
-        int parameterMode =  (instruction / ((int)Math.pow(10, offset+1)) % 10);
+        long instruction = instructionPointer.read();
+        int parameterMode = (int) (instruction / ((int)Math.pow(10, offset+1)) % 10);
 
-        int read = read(instructionPointer, offset);
+        long read = read(instructionPointer, offset);
         switch (parameterMode) {
-            case 0:
-                return Param.pointer(memory.address(read));
+            case 0: return Param.pointer(memory.address(read));
             case 1: return Param.immediate(read);
+            case 2: return Param.pointer(memory.address(read + relativeBase));
             default:
                 throw new IllegalStateException("No such parameter mode " + parameterMode);
         }
     }
 
-    private int read(Memory.Address instructionPointer, int offset) {
+    private long read(Memory.Address instructionPointer, int offset) {
         return memory.offset(instructionPointer, offset).read();
     }
 
     interface Param {
-        static Param immediate(int i) {
+        static Param immediate(long i) {
             return new Param() {
                 @Override
-                public int getValue() {
+                public long getValue() {
                     return i;
                 }
 
@@ -243,7 +263,7 @@ public class IntcodeComputer {
         static Param pointer(Memory.Address address) {
             return new Param() {
                 @Override
-                public int getValue() {
+                public long getValue() {
                     return address.read();
                 }
 
@@ -259,23 +279,29 @@ public class IntcodeComputer {
             };
         }
 
-        int getValue();
+        long getValue();
 
         Memory.Address asAddress();
     }
 
-    static class Memory {
+    public static class Memory {
 
-        private final int[] memory;
+        private final Map<Long, Long> memory = new HashMap<>();
 
-        Memory(int[] memory) {
-            this.memory = memory;
+        public static Memory of(long[] array) {
+            Memory memory = new Memory();
+
+            for (int i = 0; i < array.length; i++) {
+                memory.memory.put((long) i, array[i]);
+            }
+            return memory;
         }
 
-        Address address(int i) {
+
+        Address address(long i) {
             return new Address() {
                 @Override
-                public int toInt() {
+                public long toLong() {
                     return i;
                 }
             };
@@ -284,38 +310,42 @@ public class IntcodeComputer {
         public Address offset(Address address, int offset) {
             return new Address() {
                 @Override
-                public int toInt() {
-                    return address.toInt() + offset;
+                public long toLong() {
+                    return address.toLong() + offset;
                 }
             };
         }
 
+        public long getValue(long address) {
+            return memory.getOrDefault(address, 0l);
+        }
+
         abstract class Address {
 
-            abstract int toInt();
+            abstract long toLong();
 
-            int read() {
-                return memory[toInt()];
+            long read() {
+                return memory.getOrDefault(toLong(), 0l);
             }
 
-            void write(int value) {
-                memory[toInt()] = value;
+            void write(long value) {
+                memory.put(toLong(), value);
             }
 
             @Override
             public String toString() {
-                return "Address{"+toInt()+"}";
+                return "Address{"+ toLong()+"}";
             }
         }
     }
 
 
     public interface Input {
-        int read() throws InterruptedException;
+        long read() throws InterruptedException;
     }
     public interface Output {
         Output SOUT = System.out::println;
 
-        void write(int output);
+        void write(long output);
     }
 }

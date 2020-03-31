@@ -10,8 +10,8 @@ public class IntcodeComputerTest {
 
     @Test
     public void testParseParameterAsPointer() {
-        int[] memoryArray = {1002, 4, 3, 4, 33};
-        IntcodeComputer.Memory memory = new IntcodeComputer.Memory(memoryArray);
+        long[] memoryArray = {1002, 4, 3, 4, 33};
+        IntcodeComputer.Memory memory = IntcodeComputer.Memory.of(memoryArray);
         IntcodeComputer intcodeComputer = new IntcodeComputer(
                 memory,
                 null,
@@ -19,14 +19,14 @@ public class IntcodeComputerTest {
         );
 
         IntcodeComputer.Param param = intcodeComputer.parseParameter(memory.address(0), 1);
-        int value = param.getValue();
+        long value = param.getValue();
         assertEquals(33, value);
     }
 
     @Test
     public void testParseParameterAsImmediate() {
-        int[] memoryArray = {1002, 4, 3, 4, 33};
-        IntcodeComputer.Memory memory = new IntcodeComputer.Memory(memoryArray);
+        long[] memoryArray = {1002, 4, 3, 4, 33};
+        IntcodeComputer.Memory memory = IntcodeComputer.Memory.of(memoryArray);
         IntcodeComputer intcodeComputer = new IntcodeComputer(
                 memory,
                 null,
@@ -40,8 +40,7 @@ public class IntcodeComputerTest {
     @Test
     public void testImmediate() {
 
-        int[] memoryArray = {1002, 4, 3, 4, 33};
-        IntcodeComputer.Memory memory = new IntcodeComputer.Memory(memoryArray);
+        IntcodeComputer.Memory memory = IntcodeComputer.Memory.of(new long[]{1002, 4, 3, 4, 33});
 
         IntcodeComputer computer = new IntcodeComputer(
                 memory,
@@ -50,15 +49,13 @@ public class IntcodeComputerTest {
         );
         computer.run();
 
-        assertEquals(99, memoryArray[4]);
-
+        assertEquals(99, memory.getValue(4));
     }
 
     @Test
     public void testNegativeImmediate() {
 
-        int[] memoryArray = {1101,100,-1,4,0};
-        IntcodeComputer.Memory memory = new IntcodeComputer.Memory(memoryArray);
+        IntcodeComputer.Memory memory = IntcodeComputer.Memory.of(new long[]{1101,100,-1,4,0});
 
         IntcodeComputer computer = new IntcodeComputer(
                 memory,
@@ -67,7 +64,7 @@ public class IntcodeComputerTest {
         );
         computer.run();
 
-        assertEquals(99, memoryArray[4]);
+        assertEquals(99, memory.getValue(4));
 
     }
 
