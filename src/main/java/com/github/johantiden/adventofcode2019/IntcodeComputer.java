@@ -1,8 +1,10 @@
 package com.github.johantiden.adventofcode2019;
 
 
+import jdk.internal.util.xml.impl.Input;
+
 public class IntcodeComputer {
-    private static final boolean DEBUG_VERBOSE = true;
+    private static final boolean DEBUG_VERBOSE = false;
 
     private final Memory memory;
     private final Input input;
@@ -47,7 +49,9 @@ public class IntcodeComputer {
             case 8:
                 return _8equals2(instructionPointer);
             case 99:
-                System.out.println("99 at address " + instructionPointer + ", exiting...");
+                if (DEBUG_VERBOSE) {
+                    System.out.println("99 at address " + instructionPointer + ", exiting...");
+                }
                 return null;
             default:
                 throw new IllegalStateException("Illegal opcode:" + opcode);
@@ -148,7 +152,13 @@ public class IntcodeComputer {
     private Memory.Address _3readInput(Memory.Address instructionPointer) {
         Param param1 = parseParameter(instructionPointer, 1);
 
-        Integer argument = input.read();
+        Integer argument = null;
+        try {
+            argument = input.read();
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+            throw new RuntimeException("Interrupted while waiting for input.");
+        }
         Memory.Address target = param1.asAddress();
         if (DEBUG_VERBOSE) {
             System.out.println("3: Input " + argument + ", saving to "+ param1);
@@ -303,7 +313,7 @@ public class IntcodeComputer {
 
 
     public interface Input {
-        int read();
+        int read() throws InterruptedException;
     }
     public interface Output {
         Output SOUT = System.out::println;

@@ -1,7 +1,14 @@
 package com.github.johantiden.adventofcode2019;
 
+import com.google.common.collect.ImmutableList;
+
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 public class Six {
 
@@ -58,5 +65,60 @@ public class Six {
     }
 
 
+    static class PartTwo {
+
+        static int distance(List<Edge> edges, String a, String b) {
+            Set<String> visited = new HashSet<>();
+
+            return breadthFirstRecursive(ImmutableList.copyOf(edges), a, b, visited, 0);
+        }
+
+        private static int breadthFirstRecursive(ImmutableList<Edge> edges, String current, String target, Set<String> visited, int depth) {
+
+            if (current.equals(target)) {
+                return depth;
+            }
+
+            List<String> nonVisitedNeighbors = findNeighbors(edges, current).stream()
+                    .filter(neighbor -> !visited.contains(neighbor))
+                    .collect(Collectors.toList());
+
+            if (nonVisitedNeighbors.isEmpty()) {
+                return -1;
+            }
+
+
+            visited.addAll(nonVisitedNeighbors);
+
+            Integer innerDepth = nonVisitedNeighbors.stream()
+                    .map(neighbor -> breadthFirstRecursive(edges, neighbor, target, visited, depth + 1))
+                    .filter(d -> d >= 0)
+                    .min(Integer::compareTo)
+                    .orElse(-1);
+
+            return innerDepth;
+
+        }
+
+
+        private static ImmutableList<String> findNeighbors(List<Edge> edges, String name) {
+            List<String> downstream = edges.stream()
+                    .filter(edge -> edge.from.equals(name))
+                    .map(edge -> edge.to)
+                    .collect(Collectors.toList());
+
+            List<String> upstream = edges.stream()
+                    .filter(edge -> edge.to.equals(name))
+                    .map(edge -> edge.from)
+                    .collect(Collectors.toList());
+
+
+            return ImmutableList.<String>builder()
+                    .addAll(downstream)
+                    .addAll(upstream)
+                    .build();
+        }
+
+    }
 
 }
