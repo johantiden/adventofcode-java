@@ -1,5 +1,6 @@
 package com.github.johantiden.adventofcode2019;
 
+import org.junit.Ignore;
 import org.junit.Test;
 
 import java.util.ArrayList;
@@ -61,6 +62,7 @@ public class NineTest {
         assertEquals(2316632620l, (long)output.get(0));
     }
 
+    @Ignore("takes too long")
     @Test
     public void real2() {
 
