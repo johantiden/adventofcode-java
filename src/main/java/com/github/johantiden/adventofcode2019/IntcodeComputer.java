@@ -5,7 +5,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class IntcodeComputer {
-    private static final boolean DEBUG_VERBOSE = true;
+    private static final boolean DEBUG_VERBOSE = false;
 
     private long relativeBase;
     private final Memory memory;
