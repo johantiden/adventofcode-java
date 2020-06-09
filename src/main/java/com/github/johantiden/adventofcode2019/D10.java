@@ -14,7 +14,7 @@ import java.util.stream.Collectors;
 
 import static java.lang.Math.PI;
 
-public class Ten {
+public class D10 {
 
 
     static java.util.Map.Entry<Position, Integer> findBestSpotForStation(Map map) {

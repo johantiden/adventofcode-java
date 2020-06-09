@@ -6,11 +6,9 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import java.util.concurrent.BlockingQueue;
-import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.atomic.AtomicLong;
 
-public class Seven {
+public class D07 {
 
 
     static long findBest(long[] program) {
@@ -136,18 +134,4 @@ public class Seven {
     }
 
 
-    static class Pipe implements IntcodeComputer.Input, IntcodeComputer.Output{
-
-        private final BlockingQueue<Long> buffer = new LinkedBlockingQueue<>();
-
-        @Override
-        public long read() throws InterruptedException {
-            return buffer.take();
-        }
-
-        @Override
-        public void write(long output) {
-            buffer.offer(output);
-        }
-    }
 }

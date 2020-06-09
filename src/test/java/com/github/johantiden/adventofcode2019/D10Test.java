@@ -9,7 +9,7 @@ import java.util.Map;
 
 import static org.junit.Assert.*;
 
-public class TenTest {
+public class D10Test {
 
 
     public static final String INPUT = ".#.####..#.#...#...##..#.#.##.\n" +
@@ -45,7 +45,7 @@ public class TenTest {
 
     @Test
     public void testParseSimple() {
-        Ten.Map map = Ten.parse(
+        D10.Map map = D10.parse(
 
                 ".#..#\n" +
                 ".....\n" +
@@ -63,7 +63,7 @@ public class TenTest {
 
     @Test
     public void testLightSimple() {
-        Ten.Map map = Ten.parse(
+        D10.Map map = D10.parse(
 
                 "..........\n" +
                 "...#......\n" +
@@ -79,10 +79,10 @@ public class TenTest {
 
 
 
-        Ten.Map lightMap = map.getLightMap(new Position(0, 0));
+        D10.Map lightMap = map.getLightMap(new Position(0, 0));
 
 
-        Ten.Map expectedLightMap = Ten.parse(
+        D10.Map expectedLightMap = D10.parse(
 
                 "##########\n" +
                 "##########\n" +
@@ -107,7 +107,7 @@ public class TenTest {
 
     @Test
     public void testCountVisible() {
-        Ten.Map map = Ten.parse(
+        D10.Map map = D10.parse(
                 ".#..#\n" +
                 ".....\n" +
                 "#####\n" +
@@ -115,7 +115,7 @@ public class TenTest {
                 "...##"
         );
 
-        HashMap<Position, Integer> counts = Ten.countVisibleAsteroidsFromAllAsteroids(map);
+        HashMap<Position, Integer> counts = D10.countVisibleAsteroidsFromAllAsteroids(map);
 
         String s = toString(counts, map.width, map.height);
         System.out.println(s);
@@ -126,20 +126,20 @@ public class TenTest {
 
     @Test
     public void testFindBestSimple() {
-        Ten.Map map = Ten.parse(
+        D10.Map map = D10.parse(
             ".#..#\n" +
             ".....\n" +
             "#####\n" +
             "....#\n" +
             "...##"
         );
-        Map.Entry<Position, Integer> best = Ten.findBestSpotForStation(map);
+        Map.Entry<Position, Integer> best = D10.findBestSpotForStation(map);
         assertEquals(new Position(3, 4), best.getKey());
     }
 
     @Test
     public void testFindBestSimple2() {
-        Ten.Map map = Ten.parse(
+        D10.Map map = D10.parse(
             "......#.#.\n" +
                     "#..#.#....\n" +
                     "..#######.\n" +
@@ -151,13 +151,13 @@ public class TenTest {
                     "##...#..#.\n" +
                     ".#....####"
         );
-        Map.Entry<Position, Integer> best = Ten.findBestSpotForStation(map);
+        Map.Entry<Position, Integer> best = D10.findBestSpotForStation(map);
         assertEquals(new Position(5, 8), best.getKey());
     }
 
     @Test
     public void testFindBestSimple3() {
-        Ten.Map map = Ten.parse(
+        D10.Map map = D10.parse(
             "#.#...#.#.\n" +
                     ".###....#.\n" +
                     ".#....#...\n" +
@@ -169,13 +169,13 @@ public class TenTest {
                     "......#...\n" +
                     ".####.###."
         );
-        Map.Entry<Position, Integer> best = Ten.findBestSpotForStation(map);
+        Map.Entry<Position, Integer> best = D10.findBestSpotForStation(map);
         assertEquals(new Position(1, 2), best.getKey());
     }
 
     @Test
     public void testFindBestSimple4() {
-        Ten.Map map = Ten.parse(
+        D10.Map map = D10.parse(
             ".#..#..###\n" +
                     "####.###.#\n" +
                     "....###.#.\n" +
@@ -187,14 +187,14 @@ public class TenTest {
                     ".##...##.#\n" +
                     ".....#.#.."
         );
-        Map.Entry<Position, Integer> best = Ten.findBestSpotForStation(map);
+        Map.Entry<Position, Integer> best = D10.findBestSpotForStation(map);
         assertEquals(new Position(6, 3), best.getKey());
         assertEquals(41, (int)best.getValue());
     }
 
     @Test
     public void testFindBestSimple5() {
-        Ten.Map map = Ten.parse(
+        D10.Map map = D10.parse(
             ".#..##.###...#######\n" +
                     "##.############..##.\n" +
                     ".#.######.########.#\n" +
@@ -216,14 +216,14 @@ public class TenTest {
                     "#.#.#.#####.####.###\n" +
                     "###.##.####.##.#..##"
         );
-        Map.Entry<Position, Integer> best = Ten.findBestSpotForStation(map);
+        Map.Entry<Position, Integer> best = D10.findBestSpotForStation(map);
         assertEquals(new Position(11, 13), best.getKey());
     }
 
     @Test
     public void real() {
-        Ten.Map map = Ten.parse(INPUT);
-        Map.Entry<Position, Integer> best = Ten.findBestSpotForStation(map);
+        D10.Map map = D10.parse(INPUT);
+        Map.Entry<Position, Integer> best = D10.findBestSpotForStation(map);
         assertEquals(new Position(22, 25), best.getKey());
         assertEquals(286, (int)best.getValue());
     }
@@ -231,7 +231,7 @@ public class TenTest {
     @Test
     public void testPartTwoFromText() {
 
-        Ten.Map map = Ten.parse(
+        D10.Map map = D10.parse(
                 ".#....#####...#..\n" +
                 "##...##.#####..##\n" +
                 "##...#...#.#####.\n" +
@@ -241,7 +241,7 @@ public class TenTest {
 
         Position laser = new Position(8, 3);
 
-        List<Position> destroyed = Ten.laserTime(map, laser);
+        List<Position> destroyed = D10.laserTime(map, laser);
 
         for (int i = 0; i < destroyed.size(); i+=9) {
             List<Position> toPrint = destroyed.subList(i, Math.min(i+9, destroyed.size()));
@@ -251,7 +251,7 @@ public class TenTest {
             System.out.println(map);
 
             System.out.println("visible:");
-            System.out.println(Ten.getVisibleAsteroidsFromAsMap(laser, map));
+            System.out.println(D10.getVisibleAsteroidsFromAsMap(laser, map));
 
             System.out.println("destroyed:");
             System.out.println(s);
@@ -266,7 +266,7 @@ public class TenTest {
     @Test
     public void testPartTwoLarge() {
 
-        Ten.Map map = Ten.parse(
+        D10.Map map = D10.parse(
 ".#..##.###...#######\n" +
 "##.############..##.\n" +
 ".#.######.########.#\n" +
@@ -291,7 +291,7 @@ public class TenTest {
 
         Position laser = new Position(11, 13);
 
-        List<Position> destroyed = Ten.laserTime(map, laser);
+        List<Position> destroyed = D10.laserTime(map, laser);
 
 
 
@@ -304,7 +304,7 @@ public class TenTest {
             System.out.println(map);
 
             System.out.println("visible:");
-            System.out.println(Ten.getVisibleAsteroidsFromAsMap(laser, map));
+            System.out.println(D10.getVisibleAsteroidsFromAsMap(laser, map));
 
             System.out.println("destroyed:");
             System.out.println(s);
@@ -326,7 +326,7 @@ public class TenTest {
 
     }
 
-    public String toString(Ten.Map map, List<Position> destroyed, int width, int height) {
+    public String toString(D10.Map map, List<Position> destroyed, int width, int height) {
         String s = "";
 
         for (int y = 0; y < height; y++) {
@@ -365,9 +365,9 @@ public class TenTest {
     @Test
     public void realPartTwo() {
 
-        Ten.Map map = Ten.parse(INPUT);
+        D10.Map map = D10.parse(INPUT);
 
-        List<Position> destroyedOrder = Ten.laserTime(map, new Position(22, 25));
+        List<Position> destroyedOrder = D10.laserTime(map, new Position(22, 25));
 
         Position actual = destroyedOrder.get(200);
 

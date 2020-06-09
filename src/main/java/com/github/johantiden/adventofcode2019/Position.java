@@ -60,4 +60,8 @@ class Position {
     public int getY() {
         return y;
     }
+
+    public Position plus(int dx, int dy) {
+        return new Position(x + dx, y + dy);
+    }
 }

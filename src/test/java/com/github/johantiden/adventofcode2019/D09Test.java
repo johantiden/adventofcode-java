@@ -8,7 +8,7 @@ import java.util.List;
 
 import static org.junit.Assert.*;
 
-public class NineTest {
+public class D09Test {
 
     @Test
     public void testNewIntcodeFeatures() {

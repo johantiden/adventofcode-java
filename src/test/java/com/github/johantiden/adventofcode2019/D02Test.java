@@ -2,7 +2,7 @@ package com.github.johantiden.adventofcode2019;
 
 import org.junit.Test;
 
-public class TwoTest {
+public class D02Test {
 
     @Test
     public void testRun() {

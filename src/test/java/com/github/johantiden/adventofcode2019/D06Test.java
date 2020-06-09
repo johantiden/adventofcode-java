@@ -7,10 +7,10 @@ import java.util.List;
 
 import static org.junit.Assert.*;
 
-public class SixTest {
+public class D06Test {
 
 
-    public static final List<Six.Edge> INPUT = Six.parseInput(
+    public static final List<D06.Edge> INPUT = D06.parseInput(
             "XV5)LZ5\n" +
                     "6JC)7ZG\n" +
                     "NCW)VDZ\n" +
@@ -1886,7 +1886,7 @@ public class SixTest {
     public void testParse() {
 
 
-        List<Six.Edge> edges = Six.parseInput(
+        List<D06.Edge> edges = D06.parseInput(
                 "COM)B\n" +
                         "B)C\n" +
                         "C)D\n" +
@@ -1907,7 +1907,7 @@ public class SixTest {
     @Test
     public void testHash() {
 
-        List<Six.Edge> edges = Six.parseInput(
+        List<D06.Edge> edges = D06.parseInput(
                 "COM)B\n" +
                         "B)C\n" +
                         "C)D\n" +
@@ -1922,7 +1922,7 @@ public class SixTest {
         );
 
 
-        int hash = Six.hash(edges);
+        int hash = D06.hash(edges);
         assertEquals(42, hash);
     }
 
@@ -1930,16 +1930,16 @@ public class SixTest {
     @Test
     public void real() {
 
-        List<Six.Edge> edges = INPUT;
+        List<D06.Edge> edges = INPUT;
 
 
-        int hash = Six.hash(edges);
+        int hash = D06.hash(edges);
         assertEquals(322508, hash);
     }
 
     @Test
     public void testSantaSimple() {
-        List<Six.Edge> edges = Six.parseInput(
+        List<D06.Edge> edges = D06.parseInput(
                 "COM)B\n" +
                         "B)C\n" +
                         "C)D\n" +
@@ -1956,16 +1956,16 @@ public class SixTest {
         );
 
 
-        int distance = Six.PartTwo.distance(edges, "YOU", "SAN");
+        int distance = D06.PartTwo.distance(edges, "YOU", "SAN");
 
         assertEquals(6, distance);
     }
 
     @Test
     public void realPartTwo() {
-        List<Six.Edge> edges = INPUT;
+        List<D06.Edge> edges = INPUT;
 
-        int distance = Six.PartTwo.distance(edges, "YOU", "SAN");
+        int distance = D06.PartTwo.distance(edges, "YOU", "SAN");
 
 
 

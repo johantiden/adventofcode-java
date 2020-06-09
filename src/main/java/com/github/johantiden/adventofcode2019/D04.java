@@ -3,7 +3,7 @@ package com.github.johantiden.adventofcode2019;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Four {
+public class D04 {
 
 
     public static void main(String[] args) {

@@ -1,4 +1,4 @@
 package com.github.johantiden.adventofcode2019;
 
-public class Nine {
+public class D09 {
 }

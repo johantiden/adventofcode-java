@@ -10,7 +10,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-public class Six {
+public class D06 {
 
 
     public static List<Edge> parseInput(String input) {
