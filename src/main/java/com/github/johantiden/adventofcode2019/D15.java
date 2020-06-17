@@ -1,11 +1,8 @@
 package com.github.johantiden.adventofcode2019;
 
-import com.google.common.collect.Lists;
 import com.google.common.util.concurrent.RateLimiter;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.stream.Collectors;
 
 public class D15 {
@@ -54,7 +51,7 @@ public class D15 {
                     .collect(Collectors.toList())) {
 
                 for (Direction direction : Direction.theValues()) {
-                    Position nextPosition = direction.move(oxygenPosition);
+                    Position nextPosition = direction.step(oxygenPosition);
                     if (map.getTopology(nextPosition) == Status.OK) {
                         map.putTopology(nextPosition, Status.OXYGEN);
                     }
@@ -70,7 +67,7 @@ public class D15 {
 
     private static void countSteps(Position position, Map map, int count) {
         for (final Direction direction : Direction.theValues()) {
-            Position nextPosition = direction.move(position);
+            Position nextPosition = direction.step(position);
             Integer oldCount = map.getCount(nextPosition);
             if (map.getTopology(nextPosition) == Status.OK && (oldCount == null || oldCount > count)) {
                 map.putCount(nextPosition, count);
@@ -84,7 +81,7 @@ public class D15 {
 
     private static void walkDepthFirstRecursive(Robot robot, Map map) throws InterruptedException {
         for (final Direction direction : Direction.theValues()) {
-            if (map.getTopology(direction.move(robot.position)) == null) {
+            if (map.getTopology(direction.step(robot.position)) == null) {
                 Status status = robot.step(direction);
 
                 map.updateMap(direction, robot.position, status);
@@ -158,7 +155,7 @@ public class D15 {
             Status status = Status.of((int) read);
 
             if (status != Status.WALL) {
-                position = direction.move(position);
+                position = direction.step(position);
             }
 
             return status;
@@ -178,7 +175,7 @@ public class D15 {
 
         public void updateMap(Direction direction, Position position, Status status) {
             if (status == Status.WALL) {
-                topology.put(direction.move(position), Status.WALL);
+                topology.put(direction.step(position), Status.WALL);
             } else {
                 topology.put(position, status);
             }
@@ -276,66 +273,4 @@ public class D15 {
     }
 
 
-    enum Direction {
-        NORTH(1),
-        SOUTH(2),
-        WEST(3),
-        EAST(4),
-        ;
-        public static final ArrayList<Direction> VALUES_SORTED = Lists.newArrayList(
-                WEST, NORTH, EAST, SOUTH
-        );
-
-        private final long value;
-
-        Direction(long value) {
-            this.value = value;
-        }
-
-        public static Direction of(int i) {
-            switch (i) {
-                case 1: return NORTH;
-                case 2: return SOUTH;
-                case 3: return WEST;
-                case 4: return EAST;
-                default:throw new IllegalArgumentException("IllegalArgumentException");
-            }
-        }
-
-        public static List<Direction> theValues() {
-            return VALUES_SORTED;
-        }
-
-        public Position move(Position position) {
-            switch (this) {
-                case NORTH: return position.plus(0, -1);
-                case SOUTH: return position.plus(0, 1);
-                case WEST: return position.plus(-1, 0);
-                case EAST: return position.plus(1, 0);
-            }
-            throw new IllegalStateException();
-        }
-
-        public long value() {
-            return value;
-        }
-
-        public Direction turnRight() {
-            switch (this) {
-                case EAST: return SOUTH;
-                case WEST: return NORTH;
-                case NORTH: return EAST;
-                case SOUTH: return WEST;
-            }
-            throw new IllegalStateException();
-        }
-
-        public Direction turnLeft() {
-            return turnRight().turnRight().turnRight();
-        }
-
-        public Direction flip() {
-            return turnRight().turnRight();
-        }
-    }
 }

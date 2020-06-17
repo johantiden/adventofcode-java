@@ -86,6 +86,11 @@ class D11 {
             stateNextIsPaint = !stateNextIsPaint;
         }
 
+        @Override
+        public boolean hasNext() {
+            throw new UnsupportedOperationException();
+        }
+
         private void doWalk() {
             position = direction.step(position);
         }
@@ -127,42 +132,4 @@ class D11 {
             }
         }
     }
-
-    enum Direction {
-        NORTH,
-        EAST,
-        SOUTH,
-        WEST;
-
-        Direction left() {
-            switch (this) {
-                case EAST: return NORTH;
-                case WEST: return SOUTH;
-                case NORTH: return WEST;
-                case SOUTH: return EAST;
-                default: throw new RuntimeException("Unsupported direction");
-            }
-        }
-
-        Direction right() {
-            switch (this) {
-                case EAST: return SOUTH;
-                case WEST: return NORTH;
-                case NORTH: return EAST;
-                case SOUTH: return WEST;
-                default: throw new RuntimeException("Unsupported direction");
-            }
-        }
-
-        public Position step(Position position) {
-            switch (this) {
-                case EAST: return new Position(position.x+1, position.y);
-                case WEST: return new Position(position.x-1, position.y);
-                case NORTH: return new Position(position.x, position.y-1);
-                case SOUTH: return new Position(position.x, position.y+1);
-                default: throw new RuntimeException("Unsupported direction");
-            }
-        }
-    }
-
 }

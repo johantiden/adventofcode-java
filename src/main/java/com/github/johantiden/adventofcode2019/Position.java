@@ -1,9 +1,11 @@
 package com.github.johantiden.adventofcode2019;
 
+import javax.annotation.concurrent.Immutable;
 import java.util.Objects;
 
 import static java.lang.Math.PI;
 
+@Immutable
 class Position {
     public static final Position ZERO = new Position(0, 0);
     public final int x;

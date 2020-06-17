@@ -123,6 +123,11 @@ public class D13 {
 
             return (long) Math.signum(dx);
         }
+
+        @Override
+        public boolean hasNext() {
+            throw new UnsupportedOperationException();
+        }
     }
 
 
@@ -133,6 +138,11 @@ public class D13 {
         @Override
         public long read() throws InterruptedException {
             return queue.take();
+        }
+
+        @Override
+        public boolean hasNext() {
+            return queue.peek() != null;
         }
 
         @Override

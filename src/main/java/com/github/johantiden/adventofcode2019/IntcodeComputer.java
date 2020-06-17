@@ -3,6 +3,7 @@ package com.github.johantiden.adventofcode2019;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.function.Supplier;
 
 public class IntcodeComputer {
     private static final boolean DEBUG_VERBOSE = false;
@@ -341,11 +342,42 @@ public class IntcodeComputer {
 
 
     public interface Input {
+        static Input withSupplier(Supplier<Long> supplier) {
+            return new Input() {
+                @Override
+                public long read() throws InterruptedException {
+                    return supplier.get();
+                }
+
+                @Override
+                public boolean hasNext() {
+                    return true;
+                }
+            };
+        }
+
+        static Input constant(long l) {
+            return new Input() {
+                @Override
+                public long read() throws InterruptedException {
+                    return l;
+                }
+
+                @Override
+                public boolean hasNext() {
+                    return true;
+                }
+            };
+        }
+
         long read() throws InterruptedException;
+        boolean hasNext();
     }
+
     public interface Output {
         Output SOUT = System.out::println;
 
         void write(long output);
+
     }
 }

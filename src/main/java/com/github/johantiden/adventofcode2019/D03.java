@@ -102,16 +102,6 @@ public class D03 {
         return intersection.a.stepCount + intersection.b.stepCount;
     }
 
-    static class Pair<A, B> {
-        final A a;
-        final B b;
-
-        Pair(A a, B b) {
-            this.a = a;
-            this.b = b;
-        }
-    }
-
     static class Step {
         public static final Step ZERO = new Step(0, Position.ZERO);
         final int stepCount;

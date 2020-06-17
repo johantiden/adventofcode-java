@@ -16,4 +16,9 @@ class Pipe implements IntcodeComputer.Input, IntcodeComputer.Output{
     public void write(long output) {
         buffer.offer(output);
     }
+
+    @Override
+    public boolean hasNext() {
+        return buffer.peek() != null;
+    }
 }

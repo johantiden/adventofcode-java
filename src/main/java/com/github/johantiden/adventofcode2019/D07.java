@@ -6,12 +6,11 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import java.util.concurrent.atomic.AtomicLong;
 
 public class D07 {
 
 
-    static long findBest(long[] program) {
+    static long findBest(long[] program) throws InterruptedException {
         long max = -1;
 
         for (int a = 0; a < 5; a++) {
@@ -68,7 +67,7 @@ public class D07 {
     }
 
 
-    private static long calculateValueForPhase(long[] program, List<Integer> phases) {
+    private static long calculateValueForPhase(long[] program, List<Integer> phases) throws InterruptedException {
 
         Pipe input = new Pipe();
         Pipe ab = new Pipe();
@@ -84,8 +83,7 @@ public class D07 {
 
         input.write(0);
 
-        AtomicLong outputValue = new AtomicLong();
-        IntcodeComputer.Output output = outputValue::set;
+        Pipe output = new Pipe();
 
         IntcodeComputer a = new IntcodeComputer(IntcodeComputer.Memory.of(program), input, ab);
         a.run();
@@ -98,7 +96,7 @@ public class D07 {
         IntcodeComputer e = new IntcodeComputer(IntcodeComputer.Memory.of(program), de, output);
         e.run();
 
-        return outputValue.get();
+        return output.read();
     }
 
     private static long calculateValueForPhaseWithFeedbackLoop(long[] program, List<Integer> phases) throws InterruptedException {

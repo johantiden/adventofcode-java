@@ -51,7 +51,7 @@ public class D05Test {
         IntcodeComputer.Memory memory = IntcodeComputer.Memory.of(program);
 
         List<Long> output = new ArrayList<>();
-        IntcodeComputer computer = new IntcodeComputer(memory, () -> input, output::add);
+        IntcodeComputer computer = new IntcodeComputer(memory, IntcodeComputer.Input.withSupplier(() -> input), output::add);
 
         computer.run();
 
