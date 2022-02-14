@@ -3,9 +3,7 @@ package com.github.johantiden.adventofcode2019;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Lists;
-import jdk.nashorn.internal.ir.annotations.Immutable;
 
-import javax.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -15,8 +13,8 @@ import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
+import javax.annotation.Nonnull;
 
-import static com.google.common.primitives.Longs.join;
 import static com.google.common.primitives.Longs.toArray;
 
 public class D17 {
@@ -374,7 +372,6 @@ public class D17 {
                 .sum();
     }
 
-    @Immutable
     static class Map {
         private final ImmutableList<String> instructions;
         private final ImmutableMap<Position, Tile> map;
