@@ -1,5 +1,7 @@
 package com.github.johantiden.adventofcode._2019;
 
+import com.github.johantiden.adventofcode.common.Pair;
+
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
@@ -14,7 +16,7 @@ public class D03 {
 
         Comparator<Pair<Step, Step>> comparator = Comparator.comparing(D03::manhattanDistance);
         Pair<Step, Step> closest = findFirst(intersections, comparator);
-        return closest.a.position;
+        return closest.a().position;
     }
 
     static Pair<Step, Step> findShortestIntersection(String wire1, String wire2) {
@@ -90,8 +92,8 @@ public class D03 {
 
 
     public static int manhattanDistance(Pair<Step, Step> intersection) {
-        assert intersection.a.position.equals(intersection.b.position);
-        return Math.abs(intersection.a.position.x) + Math.abs(intersection.a.position.y);
+        assert intersection.a().position.equals(intersection.b().position);
+        return Math.abs(intersection.a().position.x) + Math.abs(intersection.a().position.y);
     }
 
     public static int manhattanDistance(Position intersection) {
@@ -99,7 +101,7 @@ public class D03 {
     }
 
     public static int asdf(Pair<Step, Step> intersection) {
-        return intersection.a.stepCount + intersection.b.stepCount;
+        return intersection.a().stepCount + intersection.b().stepCount;
     }
 
     static class Step {
