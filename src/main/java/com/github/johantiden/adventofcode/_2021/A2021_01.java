@@ -10,7 +10,7 @@ public class A2021_01 {
     public static int a(JList<Integer> report) {
         JList<Integer> offsetOne = report
                 .minusLast()
-                .plusFirst(199);
+                .plusFirst(report.get(0));
 
         return JList
                 .zip(report, offsetOne)
