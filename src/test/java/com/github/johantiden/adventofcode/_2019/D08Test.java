@@ -1,6 +1,5 @@
 package com.github.johantiden.adventofcode._2019;
 
-import com.github.johantiden.adventofcode._2019.D08;
 import com.google.common.collect.Lists;
 import org.junit.Test;
 
@@ -12,7 +11,7 @@ public class D08Test {
 
     @Test
     public void testSmall() {
-        D08.LayeredImage image = D08.parse("123456789012", 3, 2);
+        A2019_08.LayeredImage image = A2019_08.parse("123456789012", 3, 2);
 
         long hash = image.hash();
 
@@ -22,25 +21,25 @@ public class D08Test {
     @Test
     public void testCountZeroes() {
 
-        D08.LayeredImage.Layer layer = new D08.LayeredImage.Layer(
+        A2019_08.LayeredImage.Layer layer = new A2019_08.LayeredImage.Layer(
                 Lists.newArrayList(
-                        D08.parseRow("2222022222222222222222220"),
-                        D08.parseRow("2222022122222220222220222"),
-                        D08.parseRow("2222222200222222122222222"),
-                        D08.parseRow("2222220222222222220222222"),
-                        D08.parseRow("2222222212222220221222222"),
-                        D08.parseRow("0212221222222222222220202")
+                        A2019_08.parseRow("2222022222222222222222220"),
+                        A2019_08.parseRow("2222022122222220222220222"),
+                        A2019_08.parseRow("2222222200222222122222222"),
+                        A2019_08.parseRow("2222220222222222220222222"),
+                        A2019_08.parseRow("2222222212222220221222222"),
+                        A2019_08.parseRow("0212221222222222222220202")
                 )
         );
 
 
-        long zeroes = D08.LayeredImage.countZeroes(layer);
+        long zeroes = A2019_08.LayeredImage.countZeroes(layer);
         assertEquals(13, zeroes);
     }
 
     @Test
     public void real() {
-        D08.LayeredImage image = D08.parse(INPUT, 25, 6);
+        A2019_08.LayeredImage image = A2019_08.parse(INPUT, 25, 6);
 
         long hash = image.hash();
 
@@ -49,9 +48,9 @@ public class D08Test {
 
     @Test
     public void testBlend() {
-        D08.LayeredImage image = D08.parse("0222112222120000", 2, 2);
+        A2019_08.LayeredImage image = A2019_08.parse("0222112222120000", 2, 2);
 
-        D08.LayeredImage.Layer result = image.blend();
+        A2019_08.LayeredImage.Layer result = image.blend();
 
         assertEquals(0, result.get(0, 0));
         assertEquals(1, result.get(1, 0));
@@ -61,9 +60,9 @@ public class D08Test {
 
     @Test
     public void realPartTwo() {
-        D08.LayeredImage image = D08.parse(INPUT, 25, 6);
+        A2019_08.LayeredImage image = A2019_08.parse(INPUT, 25, 6);
 
-        D08.LayeredImage.Layer result = image.blend();
+        A2019_08.LayeredImage.Layer result = image.blend();
 
         result.print(System.out::print);
 

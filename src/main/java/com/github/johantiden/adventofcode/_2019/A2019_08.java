@@ -8,7 +8,7 @@ import java.util.function.IntFunction;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
-public class D08 {
+public class A2019_08 {
 
 
 
@@ -28,7 +28,7 @@ public class D08 {
         List<String> rowsImageData = splitByRow(layerImageData, width);
 
         List<LayeredImage.Layer.Row> rows = rowsImageData.stream()
-                .map(D08::parseRow)
+                .map(A2019_08::parseRow)
                 .collect(Collectors.toList());
 
         return new LayeredImage.Layer(rows);

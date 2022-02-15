@@ -1,6 +1,5 @@
 package com.github.johantiden.adventofcode._2019;
 
-import com.github.johantiden.adventofcode._2019.D06;
 import org.junit.Ignore;
 import org.junit.Test;
 
@@ -11,7 +10,7 @@ import static org.junit.Assert.*;
 public class D06Test {
 
 
-    public static final List<D06.Edge> INPUT = D06.parseInput(
+    public static final List<A2019_06.Edge> INPUT = A2019_06.parseInput(
             "XV5)LZ5\n" +
                     "6JC)7ZG\n" +
                     "NCW)VDZ\n" +
@@ -1887,7 +1886,7 @@ public class D06Test {
     public void testParse() {
 
 
-        List<D06.Edge> edges = D06.parseInput(
+        List<A2019_06.Edge> edges = A2019_06.parseInput(
                 "COM)B\n" +
                         "B)C\n" +
                         "C)D\n" +
@@ -1908,7 +1907,7 @@ public class D06Test {
     @Test
     public void testHash() {
 
-        List<D06.Edge> edges = D06.parseInput(
+        List<A2019_06.Edge> edges = A2019_06.parseInput(
                 "COM)B\n" +
                         "B)C\n" +
                         "C)D\n" +
@@ -1923,7 +1922,7 @@ public class D06Test {
         );
 
 
-        int hash = D06.hash(edges);
+        int hash = A2019_06.hash(edges);
         assertEquals(42, hash);
     }
 
@@ -1931,16 +1930,16 @@ public class D06Test {
     @Test
     public void real() {
 
-        List<D06.Edge> edges = INPUT;
+        List<A2019_06.Edge> edges = INPUT;
 
 
-        int hash = D06.hash(edges);
+        int hash = A2019_06.hash(edges);
         assertEquals(322508, hash);
     }
 
     @Test
     public void testSantaSimple() {
-        List<D06.Edge> edges = D06.parseInput(
+        List<A2019_06.Edge> edges = A2019_06.parseInput(
                 "COM)B\n" +
                         "B)C\n" +
                         "C)D\n" +
@@ -1957,16 +1956,16 @@ public class D06Test {
         );
 
 
-        int distance = D06.PartTwo.distance(edges, "YOU", "SAN");
+        int distance = A2019_06.PartTwo.distance(edges, "YOU", "SAN");
 
         assertEquals(6, distance);
     }
 
     @Test
     public void realPartTwo() {
-        List<D06.Edge> edges = INPUT;
+        List<A2019_06.Edge> edges = INPUT;
 
-        int distance = D06.PartTwo.distance(edges, "YOU", "SAN");
+        int distance = A2019_06.PartTwo.distance(edges, "YOU", "SAN");
 
 
 

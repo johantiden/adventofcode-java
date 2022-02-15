@@ -7,7 +7,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-public class D07 {
+public class A2019_07 {
 
 
     static long findBest(long[] program) throws InterruptedException {

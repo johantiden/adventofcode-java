@@ -13,7 +13,7 @@ import java.util.stream.Collectors;
 
 import static java.lang.Math.PI;
 
-public class D10 {
+public class A2019_10 {
 
 
     static java.util.Map.Entry<Position, Integer> findBestSpotForStation(Map map) {

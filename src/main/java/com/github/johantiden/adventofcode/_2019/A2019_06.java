@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-public class D06 {
+public class A2019_06 {
 
 
     public static List<Edge> parseInput(String input) {

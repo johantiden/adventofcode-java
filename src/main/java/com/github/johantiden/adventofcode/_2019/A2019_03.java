@@ -6,7 +6,7 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 
-public class D03 {
+public class A2019_03 {
 
 
     static Position findClosestIntersection(String wire1, String wire2) {
@@ -14,7 +14,7 @@ public class D03 {
         List<Step> wire2Steps = walk(wire2);
         List<Pair<Step, Step>> intersections = findIntersections(wire1Steps, wire2Steps);
 
-        Comparator<Pair<Step, Step>> comparator = Comparator.comparing(D03::manhattanDistance);
+        Comparator<Pair<Step, Step>> comparator = Comparator.comparing(A2019_03::manhattanDistance);
         Pair<Step, Step> closest = findFirst(intersections, comparator);
         return closest.a().position;
     }
@@ -24,7 +24,7 @@ public class D03 {
         List<Step> wire2Steps = walk(wire2);
         List<Pair<Step, Step>> intersections = findIntersections(wire1Steps, wire2Steps);
 
-        Comparator<Pair<Step, Step>> comparator = Comparator.comparing(D03::asdf);
+        Comparator<Pair<Step, Step>> comparator = Comparator.comparing(A2019_03::asdf);
         Pair<Step, Step> closest = findFirst(intersections, comparator);
         return closest;
     }

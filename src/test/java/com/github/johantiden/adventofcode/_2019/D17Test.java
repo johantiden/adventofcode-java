@@ -1,7 +1,5 @@
 package com.github.johantiden.adventofcode._2019;
 
-import com.github.johantiden.adventofcode._2019.D17;
-import com.github.johantiden.adventofcode._2019.Position;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
 import org.junit.Test;
@@ -27,9 +25,9 @@ public class D17Test {
                 "..#...#...#..\n" +
                 "..#####...^..";
 
-        D17.Map map = D17.Map.parse(s);
+        A2019_17.Map map = A2019_17.Map.parse(s);
 
-        List<Position> actual = D17.findIntersections(map);
+        List<Position> actual = A2019_17.findIntersections(map);
 
         List<Position> expected = Lists.newArrayList(
                 new Position(2, 2),
@@ -51,11 +49,11 @@ public class D17Test {
                 "..#...#...#..\n" +
                 "..#####...^..";
 
-        D17.Map map = D17.Map.parse(s);
+        A2019_17.Map map = A2019_17.Map.parse(s);
 
-        List<Position> intersections = D17.findIntersections(map);
+        List<Position> intersections = A2019_17.findIntersections(map);
 
-        int actual = D17.hashIntersections(intersections);
+        int actual = A2019_17.hashIntersections(intersections);
 
         assertThat(actual, is(76));
     }
@@ -64,7 +62,7 @@ public class D17Test {
     public void testCompressForwards() {
         ImmutableList<String> of = ImmutableList.of("A", "1", "2", "B");
 
-        ImmutableList<String> actual = D17.Part2.compressForwards(of);
+        ImmutableList<String> actual = A2019_17.Part2.compressForwards(of);
         ImmutableList<String> expected = ImmutableList.of("A", "3", "B");
         assertThat(actual, is(expected));
     }
@@ -73,7 +71,7 @@ public class D17Test {
     public void testCompressForwards2() {
         ImmutableList<String> of = ImmutableList.of("A", "1", "2", "4", "B");
 
-        ImmutableList<String> actual = D17.Part2.compressForwards(of);
+        ImmutableList<String> actual = A2019_17.Part2.compressForwards(of);
         ImmutableList<String> expected = ImmutableList.of("A", "7", "B");
         assertThat(actual, is(expected));
     }
@@ -82,7 +80,7 @@ public class D17Test {
     public void testCompressForwards3() {
         ImmutableList<String> of = ImmutableList.of("A", "1", "2", "4");
 
-        ImmutableList<String> actual = D17.Part2.compressForwards(of);
+        ImmutableList<String> actual = A2019_17.Part2.compressForwards(of);
         ImmutableList<String> expected = ImmutableList.of("A", "7");
         assertThat(actual, is(expected));
     }
@@ -91,14 +89,14 @@ public class D17Test {
     public void testCompressForwards4() {
         ImmutableList<String> of = ImmutableList.of("A", "1", "2", "4", "B", "3");
 
-        ImmutableList<String> actual = D17.Part2.compressForwards(of);
+        ImmutableList<String> actual = A2019_17.Part2.compressForwards(of);
         ImmutableList<String> expected = ImmutableList.of("A", "7", "B", "3");
         assertThat(actual, is(expected));
     }
 
     @Test
     public void testAddCommas() {
-        String actual = D17.Part2.addCommas("LR11L");
+        String actual = A2019_17.Part2.addCommas("LR11L");
 
         assertThat(actual, is("L,R,11,L"));
     }
@@ -107,7 +105,7 @@ public class D17Test {
     @Test
     public void testSolver() throws InterruptedException {
 
-        D17.Map map = D17.Map.parse(
+        A2019_17.Map map = A2019_17.Map.parse(
                 "#######...#####\n" +
                 "#.....#...#...#\n" +
                 "#.....#...#...#\n" +
@@ -125,11 +123,11 @@ public class D17Test {
                 "....#####......");
 
         System.out.println(map);
-        BlockingQueue<D17.Map> solutions = new LinkedBlockingQueue<>();
+        BlockingQueue<A2019_17.Map> solutions = new LinkedBlockingQueue<>();
 
-        D17.Part2.produceAllSolutions(solutions, map);
+        A2019_17.Part2.produceAllSolutions(solutions, map);
 
-        D17.Part2.consumeSolutions(solutions);
+        A2019_17.Part2.consumeSolutions(solutions);
 
 
 

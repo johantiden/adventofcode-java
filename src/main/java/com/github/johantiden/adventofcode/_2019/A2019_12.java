@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-class D12 {
+class A2019_12 {
 
 
     static World parse(String input) {

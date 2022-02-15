@@ -1,7 +1,5 @@
 package com.github.johantiden.adventofcode._2019;
 
-import com.github.johantiden.adventofcode._2019.D10;
-import com.github.johantiden.adventofcode._2019.Position;
 import org.junit.Ignore;
 import org.junit.Test;
 
@@ -47,7 +45,7 @@ public class D10Test {
 
     @Test
     public void testParseSimple() {
-        D10.Map map = D10.parse(
+        A2019_10.Map map = A2019_10.parse(
 
                 ".#..#\n" +
                 ".....\n" +
@@ -65,7 +63,7 @@ public class D10Test {
 
     @Test
     public void testLightSimple() {
-        D10.Map map = D10.parse(
+        A2019_10.Map map = A2019_10.parse(
 
                 "..........\n" +
                 "...#......\n" +
@@ -81,10 +79,10 @@ public class D10Test {
 
 
 
-        D10.Map lightMap = map.getLightMap(new Position(0, 0));
+        A2019_10.Map lightMap = map.getLightMap(new Position(0, 0));
 
 
-        D10.Map expectedLightMap = D10.parse(
+        A2019_10.Map expectedLightMap = A2019_10.parse(
 
                 "##########\n" +
                 "##########\n" +
@@ -109,7 +107,7 @@ public class D10Test {
 
     @Test
     public void testCountVisible() {
-        D10.Map map = D10.parse(
+        A2019_10.Map map = A2019_10.parse(
                 ".#..#\n" +
                 ".....\n" +
                 "#####\n" +
@@ -117,7 +115,7 @@ public class D10Test {
                 "...##"
         );
 
-        HashMap<Position, Integer> counts = D10.countVisibleAsteroidsFromAllAsteroids(map);
+        HashMap<Position, Integer> counts = A2019_10.countVisibleAsteroidsFromAllAsteroids(map);
 
         String s = toString(counts, map.width, map.height);
         System.out.println(s);
@@ -128,20 +126,20 @@ public class D10Test {
 
     @Test
     public void testFindBestSimple() {
-        D10.Map map = D10.parse(
+        A2019_10.Map map = A2019_10.parse(
             ".#..#\n" +
             ".....\n" +
             "#####\n" +
             "....#\n" +
             "...##"
         );
-        Map.Entry<Position, Integer> best = D10.findBestSpotForStation(map);
+        Map.Entry<Position, Integer> best = A2019_10.findBestSpotForStation(map);
         assertEquals(new Position(3, 4), best.getKey());
     }
 
     @Test
     public void testFindBestSimple2() {
-        D10.Map map = D10.parse(
+        A2019_10.Map map = A2019_10.parse(
             "......#.#.\n" +
                     "#..#.#....\n" +
                     "..#######.\n" +
@@ -153,13 +151,13 @@ public class D10Test {
                     "##...#..#.\n" +
                     ".#....####"
         );
-        Map.Entry<Position, Integer> best = D10.findBestSpotForStation(map);
+        Map.Entry<Position, Integer> best = A2019_10.findBestSpotForStation(map);
         assertEquals(new Position(5, 8), best.getKey());
     }
 
     @Test
     public void testFindBestSimple3() {
-        D10.Map map = D10.parse(
+        A2019_10.Map map = A2019_10.parse(
             "#.#...#.#.\n" +
                     ".###....#.\n" +
                     ".#....#...\n" +
@@ -171,13 +169,13 @@ public class D10Test {
                     "......#...\n" +
                     ".####.###."
         );
-        Map.Entry<Position, Integer> best = D10.findBestSpotForStation(map);
+        Map.Entry<Position, Integer> best = A2019_10.findBestSpotForStation(map);
         assertEquals(new Position(1, 2), best.getKey());
     }
 
     @Test
     public void testFindBestSimple4() {
-        D10.Map map = D10.parse(
+        A2019_10.Map map = A2019_10.parse(
             ".#..#..###\n" +
                     "####.###.#\n" +
                     "....###.#.\n" +
@@ -189,14 +187,14 @@ public class D10Test {
                     ".##...##.#\n" +
                     ".....#.#.."
         );
-        Map.Entry<Position, Integer> best = D10.findBestSpotForStation(map);
+        Map.Entry<Position, Integer> best = A2019_10.findBestSpotForStation(map);
         assertEquals(new Position(6, 3), best.getKey());
         assertEquals(41, (int)best.getValue());
     }
 
     @Test
     public void testFindBestSimple5() {
-        D10.Map map = D10.parse(
+        A2019_10.Map map = A2019_10.parse(
             ".#..##.###...#######\n" +
                     "##.############..##.\n" +
                     ".#.######.########.#\n" +
@@ -218,14 +216,14 @@ public class D10Test {
                     "#.#.#.#####.####.###\n" +
                     "###.##.####.##.#..##"
         );
-        Map.Entry<Position, Integer> best = D10.findBestSpotForStation(map);
+        Map.Entry<Position, Integer> best = A2019_10.findBestSpotForStation(map);
         assertEquals(new Position(11, 13), best.getKey());
     }
 
     @Test
     public void real() {
-        D10.Map map = D10.parse(INPUT);
-        Map.Entry<Position, Integer> best = D10.findBestSpotForStation(map);
+        A2019_10.Map map = A2019_10.parse(INPUT);
+        Map.Entry<Position, Integer> best = A2019_10.findBestSpotForStation(map);
         assertEquals(new Position(22, 25), best.getKey());
         assertEquals(286, (int)best.getValue());
     }
@@ -233,7 +231,7 @@ public class D10Test {
     @Test
     public void testPartTwoFromText() {
 
-        D10.Map map = D10.parse(
+        A2019_10.Map map = A2019_10.parse(
                 ".#....#####...#..\n" +
                 "##...##.#####..##\n" +
                 "##...#...#.#####.\n" +
@@ -243,7 +241,7 @@ public class D10Test {
 
         Position laser = new Position(8, 3);
 
-        List<Position> destroyed = D10.laserTime(map, laser);
+        List<Position> destroyed = A2019_10.laserTime(map, laser);
 
         for (int i = 0; i < destroyed.size(); i+=9) {
             List<Position> toPrint = destroyed.subList(i, Math.min(i+9, destroyed.size()));
@@ -253,7 +251,7 @@ public class D10Test {
             System.out.println(map);
 
             System.out.println("visible:");
-            System.out.println(D10.getVisibleAsteroidsFromAsMap(laser, map));
+            System.out.println(A2019_10.getVisibleAsteroidsFromAsMap(laser, map));
 
             System.out.println("destroyed:");
             System.out.println(s);
@@ -268,7 +266,7 @@ public class D10Test {
     @Test
     public void testPartTwoLarge() {
 
-        D10.Map map = D10.parse(
+        A2019_10.Map map = A2019_10.parse(
 ".#..##.###...#######\n" +
 "##.############..##.\n" +
 ".#.######.########.#\n" +
@@ -293,7 +291,7 @@ public class D10Test {
 
         Position laser = new Position(11, 13);
 
-        List<Position> destroyed = D10.laserTime(map, laser);
+        List<Position> destroyed = A2019_10.laserTime(map, laser);
 
 
 
@@ -306,7 +304,7 @@ public class D10Test {
             System.out.println(map);
 
             System.out.println("visible:");
-            System.out.println(D10.getVisibleAsteroidsFromAsMap(laser, map));
+            System.out.println(A2019_10.getVisibleAsteroidsFromAsMap(laser, map));
 
             System.out.println("destroyed:");
             System.out.println(s);
@@ -328,7 +326,7 @@ public class D10Test {
 
     }
 
-    public String toString(D10.Map map, List<Position> destroyed, int width, int height) {
+    public String toString(A2019_10.Map map, List<Position> destroyed, int width, int height) {
         String s = "";
 
         for (int y = 0; y < height; y++) {
@@ -367,9 +365,9 @@ public class D10Test {
     @Test
     public void realPartTwo() {
 
-        D10.Map map = D10.parse(INPUT);
+        A2019_10.Map map = A2019_10.parse(INPUT);
 
-        List<Position> destroyedOrder = D10.laserTime(map, new Position(22, 25));
+        List<Position> destroyedOrder = A2019_10.laserTime(map, new Position(22, 25));
 
         Position actual = destroyedOrder.get(200);
 

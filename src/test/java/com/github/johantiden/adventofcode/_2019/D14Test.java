@@ -1,6 +1,5 @@
 package com.github.johantiden.adventofcode._2019;
 
-import com.github.johantiden.adventofcode._2019.D14;
 import org.junit.Test;
 
 import java.util.List;
@@ -19,7 +18,7 @@ public class D14Test {
                         "7 A, 1 D => 1 E\n" +
                         "7 A, 1 E => 1 FUEL";
 
-        List<D14.Recipe> recipes = D14.Parser.parse(input);
+        List<A2019_14.Recipe> recipes = A2019_14.Parser.parse(input);
 
         assertEquals(10l, (long)recipes.get(0).inputs.get("ORE"));
     }
@@ -34,9 +33,9 @@ public class D14Test {
                         "7 A, 1 D => 1 E\n" +
                         "7 A, 1 E => 1 FUEL";
 
-        List<D14.Recipe> recipes = D14.Parser.parse(input);
+        List<A2019_14.Recipe> recipes = A2019_14.Parser.parse(input);
 
-        long oreCost = D14.solve(recipes);
+        long oreCost = A2019_14.solve(recipes);
         assertEquals(31, oreCost);
 
     }
@@ -52,9 +51,9 @@ public class D14Test {
                         "4 C, 1 A => 1 CA\n" +
                         "2 AB, 3 BC, 4 CA => 1 FUEL";
 
-        List<D14.Recipe> recipes = D14.Parser.parse(input);
+        List<A2019_14.Recipe> recipes = A2019_14.Parser.parse(input);
 
-        long oreCost = D14.solve(recipes);
+        long oreCost = A2019_14.solve(recipes);
         assertEquals(165, oreCost);
 
     }
@@ -72,9 +71,9 @@ public class D14Test {
                         "165 ORE => 2 GPVTF\n" +
                         "3 DCFZ, 7 NZVS, 5 HKGWZ, 10 PSHF => 8 KHKGT";
 
-        List<D14.Recipe> recipes = D14.Parser.parse(input);
+        List<A2019_14.Recipe> recipes = A2019_14.Parser.parse(input);
 
-        long oreCost = D14.solve(recipes);
+        long oreCost = A2019_14.solve(recipes);
         assertEquals(13312, oreCost);
 
     }
@@ -100,9 +99,9 @@ public class D14Test {
                         "7 XCVML => 6 RJRHP\n" +
                         "5 BHXH, 4 VRPVC => 5 LTCX";
 
-        List<D14.Recipe> recipes = D14.Parser.parse(input);
+        List<A2019_14.Recipe> recipes = A2019_14.Parser.parse(input);
 
-        long oreCost = D14.solve(recipes);
+        long oreCost = A2019_14.solve(recipes);
         assertEquals(2210736, oreCost);
 
     }
@@ -170,9 +169,9 @@ public class D14Test {
                         "1 FGQF => 5 WKGVW\n" +
                         "5 FDSBZ, 7 SPSW => 6 HWJVK";
 
-        List<D14.Recipe> recipes = D14.Parser.parse(input);
+        List<A2019_14.Recipe> recipes = A2019_14.Parser.parse(input);
 
-        long oreCost = D14.solve(recipes);
+        long oreCost = A2019_14.solve(recipes);
         assertEquals(278404, oreCost);
 
     }
@@ -191,9 +190,9 @@ public class D14Test {
                         "165 ORE => 2 GPVTF\n" +
                         "3 DCFZ, 7 NZVS, 5 HKGWZ, 10 PSHF => 8 KHKGT";
 
-        List<D14.Recipe> recipes = D14.Parser.parse(input);
+        List<A2019_14.Recipe> recipes = A2019_14.Parser.parse(input);
 
-        long fuel = D14.solve2(recipes);
+        long fuel = A2019_14.solve2(recipes);
         assertEquals(82892753, fuel);
         }
 

@@ -2,7 +2,7 @@ package com.github.johantiden.adventofcode._2019;
 
 import static java.lang.Math.*;
 
-public class D01 {
+public class A2019_01 {
     private static final int[] INPUT = {
             51753,
             53456,

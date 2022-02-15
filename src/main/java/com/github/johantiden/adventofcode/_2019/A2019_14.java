@@ -11,7 +11,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-public class D14 {
+public class A2019_14 {
 
 
     public static final long ORE_LIMIT = 1000000000000l;

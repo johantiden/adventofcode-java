@@ -10,7 +10,7 @@ public class D12Test {
     @Test
     public void testParse() {
 
-        D12.World world = D12.parse(
+        A2019_12.World world = A2019_12.parse(
 "<x=-1, y=0, z=2>\n" +
 "<x=2, y=-10, z=-7>\n" +
 "<x=4, y=-8, z=8>\n" +
@@ -27,7 +27,7 @@ public class D12Test {
     @Test
     public void testSimulate() {
 
-        D12.World world = D12.parse(
+        A2019_12.World world = A2019_12.parse(
 "<x=-1, y=0, z=2>\n" +
 "<x=2, y=-10, z=-7>\n" +
 "<x=4, y=-8, z=8>\n" +
@@ -82,7 +82,7 @@ public class D12Test {
     @Test
     public void testEnergy() {
 
-        D12.World world = D12.parse(
+        A2019_12.World world = A2019_12.parse(
                 "<x=-1, y=0, z=2>\n" +
                 "<x=2, y=-10, z=-7>\n" +
                 "<x=4, y=-8, z=8>\n" +
@@ -99,7 +99,7 @@ public class D12Test {
     @Test
     public void testEnergy2() {
 
-        D12.World world = D12.parse(
+        A2019_12.World world = A2019_12.parse(
                 "<x=-8, y=-10, z=0>\n" +
                 "<x=5, y=5, z=10>\n" +
                 "<x=2, y=-7, z=3>\n" +
@@ -116,7 +116,7 @@ public class D12Test {
     @Test
     public void real() {
 
-        D12.World world = D12.parse(
+        A2019_12.World world = A2019_12.parse(
                 "<x=0, y=6, z=1>\n" +
                 "<x=4, y=4, z=19>\n" +
                 "<x=-11, y=1, z=8>\n" +
@@ -133,7 +133,7 @@ public class D12Test {
     @Test
     public void testTwoFirstUniverse() {
 
-        D12.World world = D12.parse(
+        A2019_12.World world = A2019_12.parse(
                 "<x=-1, y=0, z=2>\n" +
                 "<x=2, y=-10, z=-7>\n" +
                 "<x=4, y=-8, z=8>\n" +
@@ -149,7 +149,7 @@ public class D12Test {
     @Test
     public void testTwoSecondUniverse() {
 
-        D12.World world = D12.parse(
+        A2019_12.World world = A2019_12.parse(
                 "<x=-8, y=-10, z=0>\n" +
                 "<x=5, y=5, z=10>\n" +
                 "<x=2, y=-7, z=3>\n" +
@@ -165,7 +165,7 @@ public class D12Test {
     @Test
     public void realTwo() {
 
-        D12.World world = D12.parse(
+        A2019_12.World world = A2019_12.parse(
                 "<x=0, y=6, z=1>\n" +
                 "<x=4, y=4, z=19>\n" +
                 "<x=-11, y=1, z=8>\n" +
