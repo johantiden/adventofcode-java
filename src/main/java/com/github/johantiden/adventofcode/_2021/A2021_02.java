@@ -19,22 +19,15 @@ public class A2021_02 {
     );
 
     public static void main(String[] args) {
+        JList<String> input = REAL;
 
-        Submarine submarine = parse(REAL)
-                .reduce(Submarine.ZERO, A2021_02::move);
+        Submarine submarineA = parse(input)
+                .reduce(Submarine.ZERO, A2021_02.A::move);
+        System.out.println("a=" + (submarineA.x * submarineA.depth));
 
-        System.out.println(submarine);
-        System.out.println("a=" + (submarine.x * submarine.depth));
-    }
-
-    private static Submarine move(Submarine sub, Pair<Command, Integer> command) {
-        final Integer amplitude = command.b();
-
-        return switch (command.a()) {
-            case FORWARD -> new Submarine(sub.x + amplitude, sub.depth);
-            case DOWN -> new Submarine(sub.x, sub.depth + amplitude);
-            case UP -> new Submarine(sub.x, sub.depth - amplitude);
-        };
+        Submarine submarineB = parse(input)
+                .reduce(Submarine.ZERO, A2021_02.B::move);
+        System.out.println("b=" + (submarineB.x * submarineB.depth));
     }
 
     private static JList<Pair<Command, Integer>> parse(JList<String> input) {
@@ -49,13 +42,38 @@ public class A2021_02 {
         );
     }
 
-    private record Submarine(int x, int depth) {
-        static final Submarine ZERO = new Submarine(0, 0);
+    private record Submarine(int x, int depth, int aim) {
+        static final Submarine ZERO = new Submarine(0, 0, 0);
     }
 
     private enum Command {
         FORWARD,
         DOWN,
         UP
+    }
+
+    private static class A {
+
+        private static Submarine move(Submarine sub, Pair<Command, Integer> command) {
+            final Integer amplitude = command.b();
+
+            return switch (command.a()) {
+                case FORWARD -> new Submarine(sub.x + amplitude, sub.depth, 0);
+                case DOWN -> new Submarine(sub.x, sub.depth + amplitude, 0);
+                case UP -> new Submarine(sub.x, sub.depth - amplitude, 0);
+            };
+        }
+    }
+
+    private static class B {
+        private static Submarine move(Submarine sub, Pair<Command, Integer> command) {
+            final Integer amplitude = command.b();
+
+            return switch (command.a()) {
+                case FORWARD -> new Submarine(sub.x + amplitude, sub.depth + sub.aim*amplitude, sub.aim);
+                case DOWN -> new Submarine(sub.x, sub.depth, sub.aim + amplitude);
+                case UP -> new Submarine(sub.x, sub.depth, sub.aim - amplitude);
+            };
+        }
     }
 }

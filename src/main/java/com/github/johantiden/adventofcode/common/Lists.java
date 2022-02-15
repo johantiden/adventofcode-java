@@ -12,4 +12,9 @@ public class Lists {
         }
         return windows;
     }
+
+    public static <T> JList<Pair<T, T>> slidingWindowPairs(JList<T> list) {
+        return slidingWindows(list, 2)
+                .map(p -> Pair.of(p.get(0), p.get(1)));
+    }
 }
