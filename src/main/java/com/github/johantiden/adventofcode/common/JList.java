@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
+import java.util.function.BiFunction;
 import java.util.function.BinaryOperator;
 import java.util.function.Consumer;
 import java.util.function.Function;
@@ -127,6 +128,16 @@ public class JList<T> {
 
     public T reduce(T identity, BinaryOperator<T> mapper) {
         return inner.stream().reduce(identity, mapper);
+    }
+
+    public <U> U reduce(U identity, BiFunction<U, T, U> mapper) {
+        U value = identity;
+
+        for (T t : inner) {
+            value = mapper.apply(value, t);
+        }
+
+        return value;
     }
 
     @Override
