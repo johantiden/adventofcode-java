@@ -55,9 +55,9 @@ public class A2021_02 {
     private static class A {
 
         private static Submarine move(Submarine sub, Pair<Command, Integer> command) {
-            final Integer amplitude = command.b();
+            final Integer amplitude = command.right();
 
-            return switch (command.a()) {
+            return switch (command.left()) {
                 case FORWARD -> new Submarine(sub.x + amplitude, sub.depth, 0);
                 case DOWN -> new Submarine(sub.x, sub.depth + amplitude, 0);
                 case UP -> new Submarine(sub.x, sub.depth - amplitude, 0);
@@ -67,9 +67,9 @@ public class A2021_02 {
 
     private static class B {
         private static Submarine move(Submarine sub, Pair<Command, Integer> command) {
-            final Integer amplitude = command.b();
+            final Integer amplitude = command.right();
 
-            return switch (command.a()) {
+            return switch (command.left()) {
                 case FORWARD -> new Submarine(sub.x + amplitude, sub.depth + sub.aim*amplitude, sub.aim);
                 case DOWN -> new Submarine(sub.x, sub.depth, sub.aim + amplitude);
                 case UP -> new Submarine(sub.x, sub.depth, sub.aim - amplitude);

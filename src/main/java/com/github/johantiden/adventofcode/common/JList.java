@@ -204,6 +204,18 @@ public class JList<T> {
                 .orElseThrow(() -> new RuntimeException("There was no first!"));
     }
 
+    public T median(Comparator<T> comparator) {
+        JList<T> sorted = sorted(comparator);
+        int middle = sorted.size() / 2;
+        return sorted.get(middle);
+    }
+
+    public JList<T> sorted(Comparator<T> comparator) {
+        return new JList<>(stream()
+                .sorted(comparator)
+                .toList());
+    }
+
     public <R> JList<R> flatMap(Function<T, JList<R>> mapper) {
         return new JList<>(
                 inner.stream().flatMap(t -> mapper.apply(t).stream()).toList()
@@ -216,5 +228,20 @@ public class JList<T> {
 
     public JList<Pair<T, T>> slidingWindowPairs() {
         return Lists.slidingWindowPairs(this);
+    }
+
+    public JList<T> reversed() {
+        ArrayList<T> list = new ArrayList<>();
+        int size = size();
+        for (int i = 0; i < size; i++) {
+            list.add(get(size - i - 1));
+        }
+        return new JList<>(list);
+    }
+
+    public JList<T> tail() {
+        return new JList<>(
+                stream().skip(1).toList()
+        );
     }
 }
