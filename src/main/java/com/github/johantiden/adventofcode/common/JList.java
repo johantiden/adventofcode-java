@@ -4,7 +4,9 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
+import java.util.function.BinaryOperator;
 import java.util.function.Consumer;
+import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.stream.Stream;
 import javax.annotation.Nonnull;
@@ -117,5 +119,18 @@ public class JList<T> {
 
     public JList<T> filter(Predicate<T> filter) {
         return new JList<>(inner.stream().filter(filter).toList());
+    }
+
+    public <R> JList<R> map(Function<T, R> mapper) {
+        return new JList<>(inner.stream().map(mapper).toList());
+    }
+
+    public T reduce(T identity, BinaryOperator<T> mapper) {
+        return inner.stream().reduce(identity, mapper);
+    }
+
+    @Override
+    public String toString() {
+        return inner.toString();
     }
 }
