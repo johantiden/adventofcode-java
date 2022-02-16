@@ -19,6 +19,10 @@ public class Lists {
         return Matrix.of(windows);
     }
 
+    public static JList<Integer> range(int startInclusive, int endExclusive) {
+        return new JList(IntStream.range(startInclusive, endExclusive).boxed().toList());
+    }
+
     public static JList<Integer> range(int endExclusive) {
         return new JList(IntStream.range(0, endExclusive).boxed().toList());
     }

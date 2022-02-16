@@ -74,4 +74,8 @@ public class Matrix<T> {
     public Matrix<T> filterRows(Predicate<JList<T>> rowPredicate) {
         return of(rows.filter(rowPredicate));
     }
+
+    public T get(int x, int y) {
+        return getRow(y).get(x);
+    }
 }
