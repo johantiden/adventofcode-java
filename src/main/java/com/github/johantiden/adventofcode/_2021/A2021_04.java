@@ -4,6 +4,8 @@ import com.github.johantiden.adventofcode.common.JList;
 import com.github.johantiden.adventofcode.common.Matrix;
 import com.github.johantiden.adventofcode.common.Pair;
 
+import java.util.function.Predicate;
+
 public class A2021_04 {
 
     private static final String EXAMPLE =
@@ -663,8 +665,8 @@ public class A2021_04 {
         Bingo.Board winningBoard = winningState.left().get(0);
         JList<Integer> winningSequence = winningState.right();
 
-        JList<Integer> numbersNotMatched = winningBoard.board.flatMap(row -> row)
-                .filter(i -> !winningSequence.contains(i));
+        JList<Integer> numbersNotMatched = winningBoard.board.flatten()
+                .filter(i -> !winningSequence.anyMatch(i));
 
         Integer sum = numbersNotMatched.reduce(0, Integer::sum);
         System.out.println("sum=" + sum);
@@ -691,12 +693,13 @@ public class A2021_04 {
     }
 
     private static boolean isWinner(Bingo.Board board, JList<Integer> generator) {
-        return board.board.contains(row -> isWinner(row, generator))
-                || Matrix.transpose(board.board).contains(column -> isWinner(column, generator));
+        Predicate<JList<Integer>> isWinner = line -> isWinner(line, generator);
+        return board.board.anyRowMatches(isWinner)
+                || board.board.anyColumnMatches(isWinner);
     }
 
     private static boolean isWinner(JList<Integer> rowOrColumn, JList<Integer> generator) {
-        return rowOrColumn.allMatch(generator::contains);
+        return rowOrColumn.allMatch(generator::anyMatch);
     }
 
     private static Bingo parse(String input) {
@@ -712,9 +715,9 @@ public class A2021_04 {
     private static Bingo.Board parseBoard(String boardString) {
         JList<String> rows = JList.ofArray(boardString.split("\n"));
 
-        JList<JList<String>> matrix = rows.map(r -> JList.ofArray(r.trim().split(" +")));
+        Matrix<String> matrix = Matrix.of(rows.map(r -> JList.ofArray(r.trim().split(" +"))));
 
-        JList<JList<Integer>> intMatrix = Matrix.map(matrix, Integer::parseInt);
+        Matrix<Integer> intMatrix = matrix.map(Integer::parseInt);
 
         return new Bingo.Board(intMatrix);
     }
@@ -726,7 +729,7 @@ public class A2021_04 {
     }
 
     private record Bingo(JList<Integer> generator, JList<Bingo.Board> boards) {
-        private record Board(JList<JList<Integer>> board) {
+        private record Board(Matrix<Integer> board) {
 
         }
     }

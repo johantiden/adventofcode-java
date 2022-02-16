@@ -3,7 +3,6 @@ package com.github.johantiden.adventofcode._2021;
 import com.github.johantiden.adventofcode.common.JList;
 import com.github.johantiden.adventofcode.common.Lists;
 import com.github.johantiden.adventofcode.common.Matrix;
-import com.github.johantiden.adventofcode.common.Pair;
 
 import java.util.Comparator;
 import java.util.List;
@@ -33,7 +32,7 @@ public class A2021_03 {
     
 
     public static void main(String[] args) {
-        JList<JList<Boolean>> diagnostic = parse(REAL);
+        Matrix<Boolean> diagnostic = parse(REAL);
 
         int gamma = calculateGamma(diagnostic);
         System.out.println("gamma="+gamma);
@@ -54,50 +53,49 @@ public class A2021_03 {
         System.out.println("b="+lifeSupportRating);
     }
 
-    private static int findOxygenGeneratorRating(JList<JList<Boolean>> diagnostic) {
+    private static int findOxygenGeneratorRating(Matrix<Boolean> diagnostic) {
         return findLifeSupport(diagnostic, (median, bit) -> bit.equals(median));
     }
-    private static int findC02ScrubberRating(JList<JList<Boolean>> diagnostic) {
+    private static int findC02ScrubberRating(Matrix<Boolean> diagnostic) {
         return findLifeSupport(diagnostic, (median, bit) -> !bit.equals(median));
     }
 
-    private static int findLifeSupport(JList<JList<Boolean>> diagnostic, BiPredicate<Boolean, Boolean> bitCriteria) {
-        JList<Pair<Integer, JList<Boolean>>> diagnosticWithRowAnnotations = JList.zip(Lists.range(diagnostic.size()), diagnostic);
-        int oxygenGeneratorRatingIndex = findLifeSupportIndex(diagnosticWithRowAnnotations, bitCriteria);
-        JList<Boolean> row = diagnostic.get(oxygenGeneratorRatingIndex);
+    private static int findLifeSupport(Matrix<Boolean> diagnostic, BiPredicate<Boolean, Boolean> bitCriteria) {
+        JList<Integer> rowsOfInterest = Lists.range(diagnostic.height());
+        int oxygenGeneratorRatingIndex = findLifeSupportIndexRecursive(rowsOfInterest, diagnostic, bitCriteria);
+        JList<Boolean> row = diagnostic.getRow(oxygenGeneratorRatingIndex);
         return toDecimal(row);
     }
 
-    private static int findLifeSupportIndex(JList<Pair<Integer, JList<Boolean>>> diagnosticWithRowAnnotations, BiPredicate<Boolean, Boolean> bitCriteria) {
-        JList<Boolean> firstColumn = Matrix.getColumn(0, diagnosticWithRowAnnotations.map(Pair::right));
+    private static int findLifeSupportIndexRecursive(JList<Integer> rowsOfInterest, Matrix<Boolean> diagnostic, BiPredicate<Boolean, Boolean> bitCriteria) {
+        JList<Boolean> firstColumn = diagnostic.getColumn(0);
         Boolean median = getMedian(firstColumn);
 
-        JList<Pair<Integer, JList<Boolean>>> filtered = diagnosticWithRowAnnotations.filter(row -> bitCriteria.test(median, row.right().get(0)));
-        if (filtered.size() == 1) {
-            return filtered.get(0).left();
+        JList<Integer> filteredRowsOfInterest = rowsOfInterest.filter(
+                index -> bitCriteria.test(median, diagnostic.getRow(index).get(0))
+        );
+
+        if (filteredRowsOfInterest.size() == 1) {
+            return filteredRowsOfInterest.get(0);
         } else {
-            JList<Pair<Integer, JList<Boolean>>> withoutFirstColumn = filtered.map(p -> p.withRight(p.right().tail()));
-            return findLifeSupportIndex(
-                    withoutFirstColumn, bitCriteria
-            );
+            return findLifeSupportIndexRecursive(filteredRowsOfInterest, diagnostic, bitCriteria);
         }
     }
 
-    private static int calculateGamma(JList<JList<Boolean>> diagnostic) {
+    private static int calculateGamma(Matrix<Boolean> diagnostic) {
         JList<Boolean> columnMedians = getColumnMedians(diagnostic);
         return toDecimal(columnMedians);
     }
 
-    private static JList<Boolean> getColumnMedians(JList<JList<Boolean>> diagnostic) {
-        JList<JList<Boolean>> columns = Matrix.transpose(diagnostic);
-        return columns.map(A2021_03::getMedian);
+    private static JList<Boolean> getColumnMedians(Matrix<Boolean> diagnostic) {
+        return diagnostic.reduceColumns(A2021_03::getMedian);
     }
 
     private static Boolean getMedian(JList<Boolean> column) {
         return column.median(Comparator.comparing(b -> b));
     }
 
-    private static int calculateEpsilon(JList<JList<Boolean>> diagnostic) {
+    private static int calculateEpsilon(Matrix<Boolean> diagnostic) {
         JList<Boolean> columnMedians = getColumnMedians(diagnostic);
         JList<Boolean> mediansInverted = columnMedians
                 .map(b -> !b);
@@ -118,15 +116,15 @@ public class A2021_03 {
         return b ? 1 : 0;
     }
 
-    private static JList<JList<Boolean>> parse(JList<String> input) {
-        return input
-                .map(A2021_03::parse);
+    private static Matrix<Boolean> parse(JList<String> input) {
+        return Matrix.of(input
+                .map(A2021_03::parse));
     }
 
     private static JList<Boolean> parse(String row) {
         List<Boolean> bools = row.chars()
                 .mapToObj(i -> i == '1')
                 .toList();
-        return new JList<>(bools);
+        return JList.copyOf(bools);
     }
 }

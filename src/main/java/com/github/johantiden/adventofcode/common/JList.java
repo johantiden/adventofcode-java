@@ -21,7 +21,7 @@ public class JList<T> {
 
     private final List<T> inner;
 
-    public JList(List<T> inner) {
+    protected JList(List<T> inner) {
         this.inner = Objects.requireNonNull(inner);
     }
 
@@ -45,6 +45,10 @@ public class JList<T> {
         return new JList<>(
                 Arrays.asList(array)
         );
+    }
+
+    public static JList<Boolean> copyOf(List<Boolean> bools) {
+        return new JList<>(new ArrayList<>(bools));
     }
 
     public JList<T> with(int index, T value) {
@@ -78,11 +82,11 @@ public class JList<T> {
         return inner.isEmpty();
     }
 
-    public boolean contains(T o) {
+    public boolean anyMatch(T o) {
         return inner.contains(o);
     }
 
-    public boolean contains(Predicate<T> predicate) {
+    public boolean anyMatch(Predicate<T> predicate) {
         return inner.stream()
                 .anyMatch(predicate);
     }
@@ -169,6 +173,10 @@ public class JList<T> {
         return new JList<>(inner.stream().map(mapper).toList());
     }
 
+    public <R> Matrix<R> mapToMatrix(Function<T, JList<R>> rows) {
+        return Matrix.of(map(rows));
+    }
+
     public T reduce(T identity, BinaryOperator<T> mapper) {
         return inner.stream().reduce(identity, mapper);
     }
@@ -248,11 +256,7 @@ public class JList<T> {
     }
 
     public boolean allMatch(Predicate<T> predicate) {
-        return !contains(predicate.negate());
-    }
-
-    public JList<Pair<T, T>> slidingWindowPairs() {
-        return Lists.slidingWindowPairs(this);
+        return !anyMatch(predicate.negate());
     }
 
     public JList<T> reversed() {

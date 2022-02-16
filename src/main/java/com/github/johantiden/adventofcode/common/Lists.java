@@ -1,11 +1,13 @@
 package com.github.johantiden.adventofcode.common;
 
 import java.util.ArrayList;
+import java.util.function.Function;
 import java.util.function.UnaryOperator;
 import java.util.stream.IntStream;
+import javax.annotation.Nonnull;
 
 public class Lists {
-    public static <T> JList<JList<T>> slidingWindows(JList<T> list, int windowSize) {
+    public static <T> Matrix<T> slidingWindows(JList<T> list, int windowSize) {
         JList<JList<T>> windows = JList.<JList<T>>of();
         for (int i = 0; i < list.size() - windowSize + 1; i++) {
             JList<T> window = JList.of();
@@ -14,12 +16,7 @@ public class Lists {
             }
             windows = windows.plus(window);
         }
-        return windows;
-    }
-
-    public static <T> JList<Pair<T, T>> slidingWindowPairs(JList<T> list) {
-        return slidingWindows(list, 2)
-                .map(p -> Pair.of(p.get(0), p.get(1)));
+        return Matrix.of(windows);
     }
 
     public static JList<Integer> range(int endExclusive) {
@@ -36,5 +33,10 @@ public class Lists {
             list.add(number);
         }
         return new JList<>(list);
+    }
+
+    @Nonnull
+    public static Function<JList<Integer>, Integer> sum() {
+        return list -> list.reduce(0, Integer::sum);
     }
 }

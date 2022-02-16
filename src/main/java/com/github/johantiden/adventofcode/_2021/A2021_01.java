@@ -10,13 +10,13 @@ public class A2021_01 {
 
     public static int a(JList<Integer> report) {
         return Lists.slidingWindows(report, 2)
-                .filter(pair -> pair.get(1) > pair.get(0))
-                .size();
+                .filterRows(pair -> pair.get(1) > pair.get(0))
+                .height();
     }
 
     public static int b(JList<Integer> report) {
         JList<Integer> slidingWindowSum = Lists.slidingWindows(report, 3)
-                .map(list -> list.reduce(0, Integer::sum));
+                .reduceRows(Lists.sum());
 
         return a(slidingWindowSum);
     }
