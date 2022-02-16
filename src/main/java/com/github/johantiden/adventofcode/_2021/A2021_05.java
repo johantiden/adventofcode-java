@@ -3,9 +3,9 @@ package com.github.johantiden.adventofcode._2021;
 import com.github.johantiden.adventofcode.common.Graphics;
 import com.github.johantiden.adventofcode.common.JList;
 import com.github.johantiden.adventofcode.common.LineInt;
+import com.github.johantiden.adventofcode.common.Lists;
 import com.github.johantiden.adventofcode.common.Matrix;
 import com.github.johantiden.adventofcode.common.PointInt;
-import com.github.johantiden.adventofcode.common.RectangleInt;
 
 import java.util.function.BinaryOperator;
 import javax.annotation.Nonnull;
@@ -530,23 +530,22 @@ public class A2021_05 {
 314,185 -> 67,185
 """;
 
-    private static final boolean DEBUG = false;
+    private static final boolean DEBUG = true;
 
     public static void main(String[] args) {
 
         JList<LineInt> lines = parse(REAL);
 
-
         Graphics<Integer> g = new Graphics.Solid<>(0);
 
         g = lines
                 .filter(A2021_05::isHorizontal)
-                .map(A2021_05::toHorizontalLine)
+                .map(A2021_05::toGraphics)
                 .reduce(g, add());
 
         g = lines
                 .filter(A2021_05::isVertical)
-                .map(A2021_05::toVerticalLine)
+                .map(A2021_05::toGraphics)
                 .reduce(g, add());
 
         if (DEBUG) {
@@ -589,25 +588,23 @@ public class A2021_05 {
 
     @Nonnull
     private static BinaryOperator<Graphics<Integer>> add() {
-        return (g1, g2) -> new Graphics.Blend<>(g1, g2, Integer::sum);
+        return (g1, g2) -> new Graphics.Blend<Integer>(JList.<Graphics<Integer>>of(g1, g2), Integer::sum);
     }
 
-    private static Graphics<Integer> toVerticalLine(LineInt line) {
-        int top = Math.min(line.start().y(), line.end().y());
-        int bottom = Math.max(line.start().y(), line.end().y());
-        int height = bottom - top;
-        RectangleInt bounds = new RectangleInt(line.start().x(), top, 0, height);
-        return new Graphics.Rectangle<>(
-                bounds, 1, 0
-        );
-    }
+    private static Graphics<Integer> toGraphics(LineInt line) {
+        int dx = Integer.signum(line.end().x() - line.start().x());
+        int dy = Integer.signum(line.end().y() - line.start().y());
 
-    private static Graphics<Integer> toHorizontalLine(LineInt line) {
-        int left = Math.min(line.start().x(), line.end().x());
-        int right = Math.max(line.start().x(), line.end().x());
-        int width = right - left;
-        RectangleInt bounds = new RectangleInt(left, line.start().y(), width, 0);
-        return new Graphics.Rectangle<>(bounds, 1, 0);
+        int length = Math.max(line.getAreaOfInterest().width(), line.getAreaOfInterest().height());
+
+        JList<PointInt> pixels = Lists.rangeClosed(length)
+                .map(i -> {
+                    int x = line.start().x() + i * dx;
+                    int y = line.start().y() + i * dy;
+                    return new PointInt(x, y);
+                });
+
+        return new Graphics.Pixels<>(pixels, 1, 0);
     }
 
     private static boolean isHorizontal(LineInt line) {

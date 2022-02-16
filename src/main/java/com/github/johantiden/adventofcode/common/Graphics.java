@@ -71,24 +71,52 @@ public abstract class Graphics<T> {
     }
 
     public static class Blend<T> extends Graphics<T> {
-        private final Graphics<T> under;
-        private final Graphics<T> over;
+        private final JList<Graphics<T>> layers;
         private final BinaryOperator<T> blender;
 
-        public Blend(Graphics<T> under, Graphics<T> over, BinaryOperator<T> blender) {
-            this.under = under;
-            this.over = over;
+        private Blend(JList<Graphics<T>> layers, BinaryOperator<T> blender) {
+            this.layers = layers;
             this.blender = blender;
         }
 
         @Override
         T get(int x, int y) {
-            return blender.apply(under.get(x, y), over.get(x, y));
+            JList<T> pixels = layers.map(g -> g.get(x, y));
+            return pixels.tail().reduce(pixels.get(0), blender);
         }
 
         @Override
         protected Optional<RectangleInt> areaOfInterest() {
-            return Optionals.reduceOptional(under.areaOfInterest(), over.areaOfInterest(), RectangleInt::union);
+            return layers.map(Graphics::areaOfInterest)
+                    .reduce(Optional.empty(), (under, over) -> Optionals.reduceOptional(under, over, RectangleInt::union));
+        }
+    }
+
+    public static class Pixels<T> extends Graphics<T> {
+        private final JList<PointInt> pixels;
+        private final T colorInside;
+        private final T colorOutside;
+
+        public Pixels(JList<PointInt> pixels, T colorInside, T colorOutside) {
+            this.pixels = pixels;
+            this.colorInside = colorInside;
+            this.colorOutside = colorOutside;
+        }
+
+        @Override
+        protected Optional<RectangleInt> areaOfInterest() {
+            return Optional.of(pixels
+                    .map(p -> new RectangleInt(p.x(), p.y(), 0, 0))
+                    .reduce(RectangleInt.EMPTY, RectangleInt::union));
+        }
+
+        @Override
+        T get(int x, int y) {
+            if (pixels.anyMatch(p -> p.x() == x && p.y() == y)) {
+                return colorInside;
+            } else {
+                return colorOutside;
+            }
         }
     }
 
