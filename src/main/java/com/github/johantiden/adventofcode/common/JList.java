@@ -1,10 +1,12 @@
 package com.github.johantiden.adventofcode.common;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.function.BiFunction;
 import java.util.function.BinaryOperator;
 import java.util.function.Consumer;
@@ -39,6 +41,12 @@ public class JList<T> {
         return new JList<>(newInner);
     }
 
+    public static <T> JList<T> ofArray(T[] array) {
+        return new JList<>(
+                Arrays.asList(array)
+        );
+    }
+
     public JList<T> with(int index, T value) {
         ArrayList<T> copy = new ArrayList<>(inner);
         copy.set(index, value);
@@ -70,11 +78,11 @@ public class JList<T> {
         return inner.isEmpty();
     }
 
-    public boolean anyMatch(T o) {
+    public boolean contains(T o) {
         return inner.contains(o);
     }
 
-    public boolean anyMatch(Predicate<T> predicate) {
+    public boolean contains(Predicate<T> predicate) {
         return inner.stream()
                 .anyMatch(predicate);
     }
@@ -97,11 +105,11 @@ public class JList<T> {
         return new JList<>(newInner);
     }
 
-    public JList<T> minus(Object o) {
+    public JList<T> minus(T t) {
         ArrayList<T> newInner = new ArrayList<>(inner.size() + 1);
 
         newInner.addAll(inner);
-        newInner.remove(o);
+        newInner.remove(t);
 
         return new JList<>(newInner);
     }
@@ -113,6 +121,10 @@ public class JList<T> {
         newInner.remove(inner.size() - 1);
 
         return new JList<>(newInner);
+    }
+
+    public JList<T> minusAll(JList<T> list) {
+        return list.reduce(this, JList::minus);
     }
 
     public boolean containsAll(@Nonnull Collection<?> c) {
@@ -184,6 +196,19 @@ public class JList<T> {
         return filtered.get(0);
     }
 
+    /**
+     * Returns an Optional containing a matching value if (and only if) there is one and only one element matching the predicate.
+     * Optional.empty() is returned otherwise.
+     */
+    public Optional<T> findOneOptional(Predicate<T> predicate) {
+        JList<T> filtered = filter(predicate);
+        if (filtered.size() != 1) {
+            return Optional.empty();
+        } else {
+            return Optional.of(filtered.get(0));
+        }
+    }
+
     public <U extends Comparable<? super U>> T min(Function<T, U> keyExtractor) {
        return min(Comparator.comparing(keyExtractor));
     }
@@ -223,7 +248,7 @@ public class JList<T> {
     }
 
     public boolean allMatch(Predicate<T> predicate) {
-        return !anyMatch(predicate.negate());
+        return !contains(predicate.negate());
     }
 
     public JList<Pair<T, T>> slidingWindowPairs() {
@@ -243,5 +268,32 @@ public class JList<T> {
         return new JList<>(
                 stream().skip(1).toList()
         );
+    }
+
+    public JList<T> head(int maxSize) {
+        return new JList<>(
+                stream().limit(maxSize).toList()
+        );
+    }
+
+    public T last() {
+        return get(size() - 1);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        JList<?> jList = (JList<?>) o;
+        return inner.equals(jList.inner);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(inner);
     }
 }
