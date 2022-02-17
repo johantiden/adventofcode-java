@@ -27,6 +27,10 @@ public class Lists {
         return new JList(IntStream.range(0, endExclusive).boxed().toList());
     }
 
+    public static JList<Integer> rangeClosed(int endExclusive) {
+        return new JList(IntStream.rangeClosed(0, endExclusive).boxed().toList());
+    }
+
     public static JList<Integer> ints(int start, UnaryOperator<Integer> next, int size) {
         ArrayList<Integer> list = new ArrayList<>();
         list.add(start);
