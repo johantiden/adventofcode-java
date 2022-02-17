@@ -1,14 +1,10 @@
 package com.github.johantiden.adventofcode._2021;
 
-import com.github.johantiden.adventofcode.common.Graphics;
 import com.github.johantiden.adventofcode.common.JList;
 import com.github.johantiden.adventofcode.common.LineInt;
 import com.github.johantiden.adventofcode.common.Lists;
 import com.github.johantiden.adventofcode.common.Matrix;
 import com.github.johantiden.adventofcode.common.PointInt;
-
-import java.util.function.BinaryOperator;
-import javax.annotation.Nonnull;
 
 public class A2021_05 {
 
@@ -530,48 +526,74 @@ public class A2021_05 {
 314,185 -> 67,185
 """;
 
-    private static final boolean DEBUG = true;
+    private static final boolean DEBUG = false;
 
     public static void main(String[] args) {
 
         JList<LineInt> lines = parse(REAL);
 
-        Graphics<Integer> g = new Graphics.Solid<>(0);
+        JList<PointInt> allLineEndings = lines
+                .mapMulti((l, c) -> {
+                    c.accept(l.start());
+                    c.accept(l.end());
+                });
+        int width = allLineEndings
+                .map(PointInt::x)
+                .max(Integer::compareTo) + 1;
+        int height = allLineEndings
+                .map(PointInt::y)
+                .max(Integer::compareTo) + 1;
 
-        g = lines
-                .filter(A2021_05::isHorizontal)
-                .map(A2021_05::toGraphics)
-                .reduce(g, add());
+        {
+            Matrix<Integer> canvas = Matrix.repeat(0, width, height);
 
-        g = lines
-                .filter(A2021_05::isVertical)
-                .map(A2021_05::toGraphics)
-                .reduce(g, add());
+            canvas = lines
+                    .filter(line -> isHorizontal(line) || isVertical(line))
+                    .reduce(canvas, A2021_05::drawLine);
 
+            debug(canvas);
+
+            Integer count = canvas
+                    .flatten()
+                    .filter(i -> i > 1)
+                    .map(Integer::signum)
+                    .reduce(0, Integer::sum);
+
+            System.out.println("a=" + count);
+        }
+
+        {
+            Matrix<Integer> canvas = Matrix.repeat(0, width, height);
+            canvas = lines
+                    .reduce(canvas, A2021_05::drawLine);
+
+            debug(canvas);
+
+            Integer count = canvas
+                    .flatten()
+                    .filter(i -> i > 1)
+                    .map(Integer::signum)
+                    .reduce(0, Integer::sum);
+
+            System.out.println("b=" + count);
+        }
+    }
+
+    private static void debug(Matrix<Integer> canvas) {
         if (DEBUG) {
-            print(g);
+            print(canvas);
 
-            Graphics<Integer> threshold = new Graphics.Threshold<>(i -> i > 1, g, g, new Graphics.Solid<>(0));
+            Matrix<Integer> threshold = canvas.map(i -> i > 1 ? i : 0);
 
             System.out.println("Thresholded:");
             print(threshold);
         }
-
-        Matrix<Integer> render = g.render();
-        Integer count = render
-                .flatten()
-                .filter(i -> i > 1)
-                .map(Integer::signum)
-                .reduce(0, Integer::sum);
-
-        System.out.println("a="+count);
     }
 
-    private static void print(Graphics<Integer> g) {
-        Matrix<Integer> rendered = g.render();
-        for (int y = 0; y < rendered.height(); y++) {
-            for (int x = 0; x < rendered.width(); x++) {
-                Integer value = rendered.get(x, y);
+    private static void print(Matrix<Integer> matrix) {
+        for (int y = 0; y < matrix.height(); y++) {
+            for (int x = 0; x < matrix.width(); x++) {
+                Integer value = matrix.get(x, y);
                 System.out.print(zeroToDot(value));
             }
             System.out.println();
@@ -586,31 +608,25 @@ public class A2021_05 {
         return line.start().x() == line.end().x();
     }
 
-    @Nonnull
-    private static BinaryOperator<Graphics<Integer>> add() {
-        return (g1, g2) -> Graphics.Blend.blend(JList.of(g1, g2), blender());
-    }
-
-    @Nonnull
-    private static BinaryOperator<Integer> blender() {
-        return Integer::sum;
-    }
-
-    private static Graphics<Integer> toGraphics(LineInt line) {
+    private static Matrix<Integer> drawLine(Matrix<Integer> matrix, LineInt line) {
         int dx = Integer.signum(line.end().x() - line.start().x());
         int dy = Integer.signum(line.end().y() - line.start().y());
 
         int length = Math.max(line.getAreaOfInterest().width(), line.getAreaOfInterest().height());
 
-        JList<Graphics<Integer>> pixels = Lists.rangeClosed(length)
+        JList<PointInt> pixels = Lists.rangeClosed(length)
                 .map(i -> {
                     int x = line.start().x() + i * dx;
                     int y = line.start().y() + i * dy;
                     return new PointInt(x, y);
-                })
-                .map(p -> new Graphics.Pixel<>(p, 1, 0));
+                });
 
-        return Graphics.Blend.blend(pixels, blender());
+        return pixels
+                .reduce(matrix, A2021_05::drawPixel);
+    }
+
+    private static Matrix<Integer> drawPixel(Matrix<Integer> matrix, PointInt point) {
+        return matrix.with(point.x(), point.y(), pixel -> pixel + 1);
     }
 
     private static boolean isHorizontal(LineInt line) {

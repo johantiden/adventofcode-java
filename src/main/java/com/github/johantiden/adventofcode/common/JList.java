@@ -65,7 +65,9 @@ public class JList<T> {
 
     public static <T> JList<T> repeat(T t, int count) {
         ArrayList<T> list = new ArrayList<>(count);
-        list.add(t);
+        for (int i = 0; i < count; i++) {
+            list.add(t);
+        }
         return new JList<>(list);
     }
 
@@ -174,8 +176,8 @@ public class JList<T> {
         return new JList<>(inner.stream().map(mapper).toList());
     }
 
-    public JList<T> mapMulti(BiConsumer<? super T, Consumer<T>> mapper) {
-        return new JList<T>(inner.stream().mapMulti(mapper).toList());
+    public <R> JList<R> mapMulti(BiConsumer<? super T, Consumer<R>> mapper) {
+        return new JList<R>(inner.stream().mapMulti(mapper).toList());
     }
 
     public <R> Matrix<R> mapToMatrix(Function<T, JList<R>> rows) {

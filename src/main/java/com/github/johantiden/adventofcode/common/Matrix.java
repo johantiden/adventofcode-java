@@ -2,6 +2,7 @@ package com.github.johantiden.adventofcode.common;
 
 import java.util.function.Function;
 import java.util.function.Predicate;
+import java.util.function.UnaryOperator;
 
 public class Matrix<T> {
 
@@ -9,6 +10,10 @@ public class Matrix<T> {
 
     protected Matrix(JList<JList<T>> rows) {
         this.rows = rows;
+    }
+
+    public static <T> Matrix<T> repeat(T value, int width, int height) {
+        return of(JList.repeat(JList.repeat(value, width), height));
     }
 
     public Matrix<T> transpose() {
@@ -77,5 +82,13 @@ public class Matrix<T> {
 
     public T get(int x, int y) {
         return getRow(y).get(x);
+    }
+
+    public Matrix<T> with(int x, int y, T value) {
+        return of(rows.with(y, row -> row.with(x, value)));
+    }
+
+    public Matrix<T> with(int x, int y, UnaryOperator<T> valueReplacer) {
+        return of(rows.with(y, row -> row.with(x, valueReplacer)));
     }
 }
