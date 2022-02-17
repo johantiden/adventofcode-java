@@ -7,6 +7,7 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.function.BiConsumer;
 import java.util.function.BiFunction;
 import java.util.function.BinaryOperator;
 import java.util.function.Consumer;
@@ -47,8 +48,8 @@ public class JList<T> {
         );
     }
 
-    public static JList<Boolean> copyOf(List<Boolean> bools) {
-        return new JList<>(new ArrayList<>(bools));
+    public static <T> JList<T> copyOf(List<T> list) {
+        return new JList<>(new ArrayList<>(list));
     }
 
     public JList<T> with(int index, T value) {
@@ -171,6 +172,10 @@ public class JList<T> {
 
     public <R> JList<R> map(Function<T, R> mapper) {
         return new JList<>(inner.stream().map(mapper).toList());
+    }
+
+    public JList<T> mapMulti(BiConsumer<? super T, Consumer<T>> mapper) {
+        return new JList<T>(inner.stream().mapMulti(mapper).toList());
     }
 
     public <R> Matrix<R> mapToMatrix(Function<T, JList<R>> rows) {

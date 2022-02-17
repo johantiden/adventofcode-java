@@ -588,7 +588,12 @@ public class A2021_05 {
 
     @Nonnull
     private static BinaryOperator<Graphics<Integer>> add() {
-        return (g1, g2) -> new Graphics.Blend<Integer>(JList.<Graphics<Integer>>of(g1, g2), Integer::sum);
+        return (g1, g2) -> Graphics.Blend.blend(JList.of(g1, g2), blender());
+    }
+
+    @Nonnull
+    private static BinaryOperator<Integer> blender() {
+        return Integer::sum;
     }
 
     private static Graphics<Integer> toGraphics(LineInt line) {
@@ -597,14 +602,15 @@ public class A2021_05 {
 
         int length = Math.max(line.getAreaOfInterest().width(), line.getAreaOfInterest().height());
 
-        JList<PointInt> pixels = Lists.rangeClosed(length)
+        JList<Graphics<Integer>> pixels = Lists.rangeClosed(length)
                 .map(i -> {
                     int x = line.start().x() + i * dx;
                     int y = line.start().y() + i * dy;
                     return new PointInt(x, y);
-                });
+                })
+                .map(p -> new Graphics.Pixel<>(p, 1, 0));
 
-        return new Graphics.Pixels<>(pixels, 1, 0);
+        return Graphics.Blend.blend(pixels, blender());
     }
 
     private static boolean isHorizontal(LineInt line) {

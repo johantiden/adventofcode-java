@@ -1,5 +1,7 @@
 package com.github.johantiden.adventofcode.common;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 import java.util.function.BinaryOperator;
 import java.util.function.Predicate;
@@ -9,10 +11,21 @@ public abstract class Graphics<T> {
     public Matrix<T> render() {
         RectangleInt clip = areaOfInterest()
                 .orElseThrow(() -> new IllegalStateException("Infinite Graphics cannot be rendered! Please restrict the viewport"));
-        JList<JList<T>> rendered = Lists.range(clip.top(), clip.bottom() + 1)
-                .map(y -> Lists.range(clip.left(), clip.right() + 1)
-                        .map(x -> get(x, y)));
-        return Matrix.of(rendered);
+
+        List<List<T>> rendered = new ArrayList<>(clip.height() + 1);
+
+        for (int y = clip.top(); y <= clip.bottom(); y++) {
+            ArrayList<T> row = new ArrayList<>(clip.width() + 1);
+            for (int x = clip.left(); x <= clip.right(); x++) {
+                row.add(get(x, y));
+            }
+            rendered.add(row);
+        }
+
+        JList<JList<T>> jListJList = JList.copyOf(rendered)
+                .map(JList::copyOf);
+
+        return Matrix.of(jListJList);
     }
 
     protected abstract Optional<RectangleInt> areaOfInterest();
@@ -79,6 +92,20 @@ public abstract class Graphics<T> {
             this.blender = blender;
         }
 
+        public static <T> Graphics<T> blend(JList<Graphics<T>> layers, BinaryOperator<T> blender) {
+
+            JList<Graphics<T>> flattened = layers.mapMulti((g, c) -> {
+                        if (g instanceof Graphics.Blend<T> && ((Blend<T>) g).blender.equals(blender)) {
+                            JList<Graphics<T>> childLayers = ((Blend<T>) g).layers;
+                            childLayers.forEach(c);
+                        } else {
+                            c.accept(g);
+                        }
+                    });
+
+            return new Blend<>(flattened, blender);
+        }
+
         @Override
         T get(int x, int y) {
             JList<T> pixels = layers.map(g -> g.get(x, y));
@@ -92,27 +119,25 @@ public abstract class Graphics<T> {
         }
     }
 
-    public static class Pixels<T> extends Graphics<T> {
-        private final JList<PointInt> pixels;
+    public static class Pixel<T> extends Graphics<T> {
+        private final PointInt pixel;
         private final T colorInside;
         private final T colorOutside;
 
-        public Pixels(JList<PointInt> pixels, T colorInside, T colorOutside) {
-            this.pixels = pixels;
+        public Pixel(PointInt pixel, T colorInside, T colorOutside) {
+            this.pixel = pixel;
             this.colorInside = colorInside;
             this.colorOutside = colorOutside;
         }
 
         @Override
         protected Optional<RectangleInt> areaOfInterest() {
-            return Optional.of(pixels
-                    .map(p -> new RectangleInt(p.x(), p.y(), 0, 0))
-                    .reduce(RectangleInt.EMPTY, RectangleInt::union));
+            return Optional.of(new RectangleInt(pixel.x(), pixel.y(), 0, 0));
         }
 
         @Override
         T get(int x, int y) {
-            if (pixels.anyMatch(p -> p.x() == x && p.y() == y)) {
+            if (pixel.x() == x && pixel.y() == y) {
                 return colorInside;
             } else {
                 return colorOutside;
