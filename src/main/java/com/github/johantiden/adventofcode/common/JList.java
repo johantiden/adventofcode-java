@@ -281,6 +281,10 @@ public class JList<T> {
         );
     }
 
+    public T head() {
+        return get(0);
+    }
+
     public JList<T> head(int maxSize) {
         return new JList<>(
                 stream().limit(maxSize).toList()
@@ -306,5 +310,11 @@ public class JList<T> {
     @Override
     public int hashCode() {
         return Objects.hash(inner);
+    }
+
+    public JList<T> concat(JList<T> after) {
+        ArrayList<T> newList = new ArrayList<>(inner);
+        newList.addAll(after.inner);
+        return new JList<>(newList);
     }
 }
