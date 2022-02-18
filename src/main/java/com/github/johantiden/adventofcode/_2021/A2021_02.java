@@ -19,13 +19,13 @@ public class A2021_02 {
     );
 
     public static void main(String[] args) {
-        JList<String> input = REAL;
+        JList<Pair<Command, Integer>> input = parse(REAL);
 
-        Submarine submarineA = parse(input)
+        Submarine submarineA = input
                 .reduce(Submarine.ZERO, A2021_02.A::move);
         System.out.println("a=" + (submarineA.x * submarineA.depth));
 
-        Submarine submarineB = parse(input)
+        Submarine submarineB = input
                 .reduce(Submarine.ZERO, A2021_02.B::move);
         System.out.println("b=" + (submarineB.x * submarineB.depth));
     }
