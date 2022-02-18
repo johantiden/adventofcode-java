@@ -8,7 +8,7 @@ import java.util.function.Predicate;
 
 public class A2021_04 {
 
-    private static final String EXAMPLE =
+    static final String EXAMPLE =
 """
 7,4,9,5,11,17,23,2,0,14,21,24,10,16,13,6,15,25,12,22,18,20,8,19,3,26,1
 
@@ -31,7 +31,7 @@ public class A2021_04 {
  2  0 12  3  7
 """;
 
-    private static final String REAL =
+    static final String REAL =
 """
 83,69,34,46,30,23,19,75,22,37,89,78,32,39,11,44,95,43,26,48,84,53,94,88,18,40,62,35,27,42,15,2,91,20,4,64,99,71,54,97,52,36,28,7,74,45,70,86,98,1,61,50,68,6,77,8,57,47,51,72,65,3,49,24,79,13,17,92,41,80,63,67,82,90,55,0,10,93,38,21,59,73,33,31,9,76,5,66,16,58,85,87,12,29,25,14,96,56,60,81
 
@@ -636,27 +636,20 @@ public class A2021_04 {
  7 89 62  9 49
 """;
 
+    static int a(String input) {
+        Pair<JList<Bingo.Board>, JList<Integer>> winningState = findWinners(parse(input));
+        return getBingoScore(winningState);
+    }
 
-    public static void main(String[] args) {
-        Bingo originalBingo = parse(REAL);
-
-        {
-            Pair<JList<Bingo.Board>, JList<Integer>> winningState = findWinners(originalBingo);
-            int a = getBingoScore(winningState);
-            System.out.println("a=" + a);
+    static int b(String input) {
+        Bingo bingo = parse(input);
+        while (bingo.boards().size() > 1) {
+            Pair<JList<Bingo.Board>, JList<Integer>> winningState = findWinners(bingo);
+            JList<Bingo.Board> minusWinners = bingo.boards().minusAll(winningState.left());
+            bingo = new Bingo(bingo.generator, minusWinners);
         }
 
-        {
-            Bingo bingo = originalBingo;
-            while (bingo.boards().size() > 1) {
-                Pair<JList<Bingo.Board>, JList<Integer>> winningState = findWinners(bingo);
-                JList<Bingo.Board> minusWinners = bingo.boards().minusAll(winningState.left());
-                bingo = new Bingo(bingo.generator, minusWinners);
-            }
-
-            int b = getBingoScore(findWinners(bingo));
-            System.out.println("b=" + b);
-        }
+        return getBingoScore(findWinners(bingo));
     }
 
     private static int getBingoScore(Pair<JList<Bingo.Board>, JList<Integer>> winningState) {
