@@ -5,7 +5,7 @@ import com.github.johantiden.adventofcode.common.Pair;
 
 public class A2021_08 {
 
-    private static final String EXAMPLE =
+    static final String EXAMPLE =
 """
 be cfbegad cbdgef fgaecd cgeb fdcge agebfd fecdb fabcd edb | fdgacbe cefdb cefbgd gcbe
 edbfga begcd cbg gc gcadebf fbgde acbgfd abcde gfcbed gfec | fcgedb cgb dgebacf gc
@@ -19,7 +19,7 @@ egadfb cdbfeg cegd fecab cgb gbdefca cg fgcdab egfdb bfceg | gbdfcae bgc cg cgb
 gcafb gcf dcaebfg ecagb gf abcdeg gaef cafbge fdbac fegbdc | fgae cfgab fg bagce
 """;
 
-    private static final String REAL =
+    static final String REAL =
 """
 eadbcf faceb faecgd gdefabc adc ad adbf gfacbe bceda dcegb | gdfcae adc cedbfa dafb
 ed acegbfd defb ead dbcfae dbeca caefdg bgecfa dabgc efacb | gfecab ed cdaegf de
@@ -223,20 +223,18 @@ fcabged abgdc gac bgafcd gdfab gabefd cdeab cg gadfec cbfg | edcbafg acg dbacegf
 cdf feacb dfbac dbfcga bfgda adgc dc fdebga gcefdb dbaegfc | gbeafd fabdcg dcf cd
 """;
 
-    public static void main(String[] args) {
-        JList<Pair<JList<String>, JList<String>>> rows = parse(REAL);
+    static int a(String input) {
+        JList<Pair<JList<String>, JList<String>>> rows = parse(input);
 
         JList<JList<String>> outputs = rows.map(Pair::right);
         JList<String> flattened = outputs.mapMulti(JList::forEach);
 
-        int count = flattened.filter(s ->
+        return flattened.filter(s ->
                         s.length() == 2 ||
                                 s.length() == 4 ||
                                 s.length() == 3 ||
                                 s.length() == 7)
                 .size();
-
-        System.out.println("a=" + count);
     }
 
     private static JList<Pair<JList<String>, JList<String>>> parse(String input) {
