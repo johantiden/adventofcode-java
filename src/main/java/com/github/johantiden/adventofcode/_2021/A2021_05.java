@@ -6,9 +6,11 @@ import com.github.johantiden.adventofcode.common.Lists;
 import com.github.johantiden.adventofcode.common.Matrix;
 import com.github.johantiden.adventofcode.common.PointInt;
 
+import javax.annotation.Nonnull;
+
 public class A2021_05 {
 
-    private static final String EXAMPLE =
+    static final String EXAMPLE =
 """
 0,9 -> 5,9
 8,0 -> 0,8
@@ -22,7 +24,7 @@ public class A2021_05 {
 5,5 -> 8,2
 """;
 
-    private static final String REAL =
+    static final String REAL =
 """
 60,28 -> 893,861
 934,945 -> 222,233
@@ -528,10 +530,41 @@ public class A2021_05 {
 
     private static final boolean DEBUG = false;
 
-    public static void main(String[] args) {
+    static Integer a(String input) {
+        JList<LineInt> lines = parse(input);
+        Matrix<Integer> canvas = makeCanvasThatFitsAllLines(lines);
 
-        JList<LineInt> lines = parse(REAL);
+        canvas = lines
+                .filter(line -> isHorizontal(line) || isVertical(line))
+                .reduce(canvas, A2021_05::drawLine);
 
+        debug(canvas);
+
+        return canvas
+                .flatten()
+                .filter(i -> i > 1)
+                .map(Integer::signum)
+                .reduce(0, Integer::sum);
+    }
+
+    static int b(String input) {
+        JList<LineInt> lines = parse(input);
+
+        Matrix<Integer> canvas = makeCanvasThatFitsAllLines(lines);
+        canvas = lines
+                .reduce(canvas, A2021_05::drawLine);
+
+        debug(canvas);
+
+        return canvas
+                .flatten()
+                .filter(i -> i > 1)
+                .map(Integer::signum)
+                .reduce(0, Integer::sum);
+    }
+
+    @Nonnull
+    private static Matrix<Integer> makeCanvasThatFitsAllLines(JList<LineInt> lines) {
         JList<PointInt> allLineEndings = lines
                 .mapMulti((l, c) -> {
                     c.accept(l.start());
@@ -543,54 +576,21 @@ public class A2021_05 {
         int height = allLineEndings
                 .map(PointInt::y)
                 .max(Integer::compareTo) + 1;
-
-        {
-            Matrix<Integer> canvas = Matrix.repeat(0, width, height);
-
-            canvas = lines
-                    .filter(line -> isHorizontal(line) || isVertical(line))
-                    .reduce(canvas, A2021_05::drawLine);
-
-            debug(canvas);
-
-            Integer count = canvas
-                    .flatten()
-                    .filter(i -> i > 1)
-                    .map(Integer::signum)
-                    .reduce(0, Integer::sum);
-
-            System.out.println("a=" + count);
-        }
-
-        {
-            Matrix<Integer> canvas = Matrix.repeat(0, width, height);
-            canvas = lines
-                    .reduce(canvas, A2021_05::drawLine);
-
-            debug(canvas);
-
-            Integer count = canvas
-                    .flatten()
-                    .filter(i -> i > 1)
-                    .map(Integer::signum)
-                    .reduce(0, Integer::sum);
-
-            System.out.println("b=" + count);
-        }
+        return Matrix.repeat(0, width, height);
     }
 
     private static void debug(Matrix<Integer> canvas) {
         if (DEBUG) {
-            print(canvas);
+            debugPrint(canvas);
 
             Matrix<Integer> threshold = canvas.map(i -> i > 1 ? i : 0);
 
             System.out.println("Thresholded:");
-            print(threshold);
+            debugPrint(threshold);
         }
     }
 
-    private static void print(Matrix<Integer> matrix) {
+    private static void debugPrint(Matrix<Integer> matrix) {
         for (int y = 0; y < matrix.height(); y++) {
             for (int x = 0; x < matrix.width(); x++) {
                 Integer value = matrix.get(x, y);
