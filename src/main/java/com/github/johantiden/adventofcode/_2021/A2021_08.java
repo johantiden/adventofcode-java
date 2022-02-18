@@ -237,6 +237,12 @@ cdf feacb dfbac dbfcga bfgda adgc dc fdebga gcefdb dbaegfc | gbeafd fabdcg dcf c
                 .size();
     }
 
+    static int b(String input) {
+        JList<Pair<JList<String>, JList<String>>> rows = parse(input);
+
+        return -1;
+    }
+
     private static JList<Pair<JList<String>, JList<String>>> parse(String input) {
         JList<String> rows = JList.ofArray(input.split("\\n"));
         return rows.map(A2021_08::parseRow);

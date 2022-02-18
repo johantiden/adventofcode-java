@@ -15,7 +15,7 @@ public class A2021_08Test {
 
     @Test
     public void b() {
-//        assertThat(A2021_08.b(A2021_08.EXAMPLE), is(168));
+        assertThat(A2021_08.b(A2021_08.EXAMPLE), is(61229));
 //        assertThat(A2021_08.b(A2021_08.REAL), is(94862124));
     }
 }
