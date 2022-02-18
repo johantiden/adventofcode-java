@@ -169,7 +169,12 @@ public class JList<T> {
     }
 
     public JList<T> filter(Predicate<T> filter) {
-        return new JList<>(inner.stream().filter(filter).toList());
+        List<T> filtered = inner.stream().filter(filter).toList();
+        if (filtered.size() == size()) {
+            return this;
+        } else {
+            return new JList<>(filtered);
+        }
     }
 
     public <R> JList<R> map(Function<T, R> mapper) {

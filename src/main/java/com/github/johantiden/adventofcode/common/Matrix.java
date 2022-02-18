@@ -76,6 +76,10 @@ public class Matrix<T> {
         return rows.get(index);
     }
 
+    public Matrix<T> getRows(JList<Integer> indices) {
+        return of(indices.map(this::getRow));
+    }
+
     public Matrix<T> filterRows(Predicate<JList<T>> rowPredicate) {
         return of(rows.filter(rowPredicate));
     }
@@ -90,5 +94,12 @@ public class Matrix<T> {
 
     public Matrix<T> with(int x, int y, UnaryOperator<T> valueReplacer) {
         return of(rows.with(y, row -> row.with(x, valueReplacer)));
+    }
+
+    /**
+     * Analoguous to 'tail' but in the horizontal direction i.e. we will be dropping the leftmost column.
+     */
+    public Matrix<T> tailRight() {
+        return of(rows.map(JList::tail));
     }
 }
