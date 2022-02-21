@@ -48,7 +48,7 @@ public class JList<T> {
         );
     }
 
-    public static <T> JList<T> copyOf(List<T> list) {
+    public static <T> JList<T> copyOf(Collection<T> list) {
         return new JList<>(new ArrayList<>(list));
     }
 
@@ -85,7 +85,7 @@ public class JList<T> {
         return inner.isEmpty();
     }
 
-    public boolean anyMatch(T o) {
+    public boolean contains(T o) {
         return inner.contains(o);
     }
 
@@ -134,8 +134,8 @@ public class JList<T> {
         return list.reduce(this, JList::minus);
     }
 
-    public boolean containsAll(@Nonnull Collection<?> c) {
-        return inner.containsAll(c);
+    public boolean containsAll(@Nonnull JList<T> list) {
+        return list.allMatch(this::contains);
     }
 
     public JList<T> plusAll(@Nonnull Collection<? extends T> c) {
@@ -321,5 +321,24 @@ public class JList<T> {
         ArrayList<T> newList = new ArrayList<>(inner);
         newList.addAll(after.inner);
         return new JList<>(newList);
+    }
+
+    public JList<T> intersection(JList<T> that) {
+        return this.concat(that)
+                .filter(this::contains)
+                .filter(that::contains)
+                .distinct();
+    }
+
+    private JList<T> distinct() {
+        return new JList<>(inner.stream().distinct().toList());
+    }
+
+    public T findOne() {
+        return findOne(t -> true);
+    }
+
+    public Iterable<T> iterable() {
+        return inner;
     }
 }

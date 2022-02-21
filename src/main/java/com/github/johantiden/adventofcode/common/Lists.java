@@ -1,6 +1,7 @@
 package com.github.johantiden.adventofcode.common;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.function.Function;
 import java.util.function.UnaryOperator;
 import java.util.stream.IntStream;
@@ -46,5 +47,10 @@ public class Lists {
     @Nonnull
     public static Function<JList<Integer>, Integer> sum() {
         return list -> list.reduce(0, Integer::sum);
+    }
+
+    public static JList<Character> charactersOf(String string) {
+        List<Character> chars = string.chars().mapToObj(i -> (char) i).toList();
+        return new JList<>(chars);
     }
 }

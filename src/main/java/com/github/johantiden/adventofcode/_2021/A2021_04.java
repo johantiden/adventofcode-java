@@ -659,7 +659,7 @@ public class A2021_04 {
         JList<Integer> winningSequence = winningState.right();
 
         JList<Integer> numbersNotMatched = winningBoard.board.flatten()
-                .filter(i -> !winningSequence.anyMatch(i));
+                .filter(i -> !winningSequence.contains(i));
 
         Integer sum = numbersNotMatched.reduce(0, Integer::sum);
         System.out.println("sum=" + sum);
@@ -692,7 +692,7 @@ public class A2021_04 {
     }
 
     private static boolean isWinner(JList<Integer> rowOrColumn, JList<Integer> generator) {
-        return rowOrColumn.allMatch(generator::anyMatch);
+        return rowOrColumn.allMatch(generator::contains);
     }
 
     private static Bingo parse(String input) {

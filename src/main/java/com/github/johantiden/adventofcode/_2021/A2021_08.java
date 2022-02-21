@@ -2,7 +2,14 @@ package com.github.johantiden.adventofcode._2021;
 
 import com.github.johantiden.adventofcode.common.JList;
 import com.github.johantiden.adventofcode.common.JMap;
+import com.github.johantiden.adventofcode.common.Lists;
 import com.github.johantiden.adventofcode.common.Pair;
+
+import java.util.Arrays;
+import java.util.Comparator;
+import java.util.function.BiFunction;
+import java.util.function.UnaryOperator;
+import javax.annotation.Nonnull;
 
 public class A2021_08 {
 
@@ -246,27 +253,169 @@ cdf feacb dfbac dbfcga bfgda adgc dc fdebga gcefdb dbaegfc | gbeafd fabdcg dcf c
     static long b(String input) {
         JList<Pair<JList<String>, JList<String>>> rows = parse(input);
 
-        Long sum = rows
+        return rows
                 .map(row -> {
-                    JMap<Character, Segment> solution = deduce(row.left());
+                    JMap<String, Integer> solution = Deducer.deduce(row.left());
                     return decode(solution, row.right());
                 })
                 .reduce(0L, Long::sum);
-
-        return sum;
     }
 
-    private static long decode(JMap<Character, Segment> solution, JList<String> right) {
-        return -1L;
+    static long decode(JMap<String, Integer> solution, JList<String> signal) {
+        JList<Integer> decoded = signal
+                .map(word -> solution.getOrThrow(key -> isAnagram(key, word)));
+        String concat = decoded
+                .reduce("", (a, b) -> a + b);
+        return Long.parseLong(concat);
     }
 
-    private static JMap<Character, Segment> deduce(JList<String> inputs) {
-        return JMap.empty();
+    //https://www.javatpoint.com/java-program-to-check-whether-two-strings-are-anagram-or-not
+    private static boolean isAnagram(String a, String b) {
+        if (a.length() == b.length()) {
+            char[] charsA = a.toCharArray();
+            char[] charsB = b.toCharArray();
+            Arrays.sort(charsA);
+            Arrays.sort(charsB);
+            return Arrays.equals(charsA, charsB);
+        } else {
+            return false;
+        }
     }
 
-    private enum Segment {
-        A,B,C,D,E,F,G
+
+    private static class Deducer {
+        static JMap<String, Integer> deduce(JList<String> inputs) {
+            JMap<String, JList<Integer>> hypotheses = full(inputs);
+            JMap<String, Integer> deduced = JMap.empty();
+            State state = new State(deduced, hypotheses);
+
+            State solution = deduceRecursively(state);
+            return solution.deduced;
+        }
+
+        private static State deduceRecursively(State inputState) {
+            if (inputState.hypotheses.isEmpty()) {
+                return inputState;
+            }
+
+            JList<UnaryOperator<State>> deducers = JList.of(
+                    Deducer::moveToDeducedIfOnlyOneHypothesisLeft,
+                    state -> solveIfLengthEquals(state, 2, 1),
+                    state -> solveIfLengthEquals(state, 3, 7),
+                    state -> solveIfLengthEquals(state, 7, 8),
+                    state -> solveIfLengthEquals(state, 4, 4),
+                    state -> reduceIfLengthEquals(state, 5, JList.of(2, 3, 5)),
+                    state -> reduceIfLengthEquals(state, 6, JList.of(0, 6, 9)),
+                    Deducer::removeAsHypothesisIfAlreadySolved,
+                    state -> ifContainsOnlyTheseAreValid(state, 1, JList.of(0, 1, 3, 4, 7, 8, 9)),
+                    state -> ifContainsOnlyTheseAreValid(state, 4, JList.of(4, 8, 9)),
+                    state -> ifContainedOnlyTheseAreValid(state, 6, JList.of(5, 6))
+            );
+
+
+            State state = deducers
+                    .reduce(inputState, (s, deducer) -> deducer.apply(s));
+
+
+            if (state.equals(inputState)) {
+                 throw new IllegalStateException("No more deduction possible!");
+            }
+
+
+            return deduceRecursively(state);
+        }
+
+        private static State removeAsHypothesisIfAlreadySolved(State state) {
+            for (Integer deduced : state.deduced.values().iterable()) {
+                State newState = new State(
+                        state.deduced,
+                        state.hypotheses.mapValues(list -> list.minus(deduced))
+                );
+                if (!newState.equals(state)) {
+                    return newState;
+                }
+            }
+            return state;
+        }
+
+        private static State ifContainsOnlyTheseAreValid(State state, int deducedAlready, JList<Integer> onlyThese) {
+            JList<String> ones = state.deduced.keysWhereValue(i -> i == deducedAlready);
+
+            if (!ones.isEmpty()) {
+                JList<Character> segmentsOfOne = Lists.charactersOf(ones.get(0));
+
+                for (String hypothesisKey : state.hypotheses.keys().iterable()) {
+                    JList<Character> segmentsOfHypothesis = Lists.charactersOf(hypothesisKey);
+                    if (segmentsOfHypothesis.containsAll(segmentsOfOne)) {
+                        State newState = onlyTheseHypothesesAreValid(onlyThese).apply(state, hypothesisKey);
+                        if (!newState.equals(state)) {
+                            return newState;
+                        }
+                    }
+                }
+            }
+
+            return state;
+        }
+
+        private static State ifContainedOnlyTheseAreValid(State state, int deducedAlready, JList<Integer> onlyThese) {
+            JList<String> ones = state.deduced.keysWhereValue(i -> i == deducedAlready);
+
+            if (!ones.isEmpty()) {
+                JList<Character> segmentsOfOne = Lists.charactersOf(ones.get(0));
+
+                for (String hypothesisKey : state.hypotheses.keys().iterable()) {
+                    JList<Character> segmentsOfHypothesis = Lists.charactersOf(hypothesisKey);
+                    if (segmentsOfOne.containsAll(segmentsOfHypothesis)) {
+                        State newState = onlyTheseHypothesesAreValid(onlyThese).apply(state, hypothesisKey);
+                        if (!newState.equals(state)) {
+                            return newState;
+                        }
+                    }
+                }
+            }
+
+            return state;
+        }
+
+        private static State moveToDeducedIfOnlyOneHypothesisLeft(State state) {
+            return state.hypotheses.keysWhereValue(list -> list.size() == 1)
+                    .reduce(state, (s, key) -> new State(
+                            s.deduced.with(key, s.hypotheses.getOrThrow(key).findOne()),
+                            s.hypotheses.minus(key)
+                    ));
+        }
+
+        private static State reduceIfLengthEquals(State state, int length, JList<Integer> remainingHypotheses) {
+            return state.hypotheses.keysWhereKey(key -> key.length() == length)
+                    .reduce(state, onlyTheseHypothesesAreValid(remainingHypotheses));
+        }
+
+        @Nonnull
+        private static BiFunction<State, String, State> onlyTheseHypothesesAreValid(JList<Integer> remainingHypotheses) {
+            return (s, key) -> new State(
+                    s.deduced,
+                    s.hypotheses.with(key, remainingHypotheses::intersection)
+            );
+        }
+
+        private static State solveIfLengthEquals(State state, int length, int digit) {
+            return state.hypotheses.keysWhereKey(key -> key.length() == length)
+                    .reduce(state, (s, key) -> new State(
+                            s.deduced.with(key, digit),
+                            s.hypotheses.minus(key)
+                    ));
+        }
+
+        private record State(JMap<String, Integer> deduced, JMap<String, JList<Integer>> hypotheses) {}
+
+        private static JMap<String, JList<Integer>> full(JList<String> inputs) {
+            JList<Pair<String, JList<Integer>>> pairs = inputs
+                    .map(word -> new Pair<>(word, Lists.rangeClosed(9)));
+            return JMap.toMap(pairs);
+        }
     }
+
 
     private static JList<Pair<JList<String>, JList<String>>> parse(String input) {
         JList<String> rows = JList.ofArray(input.split("\\n"));
@@ -282,6 +431,14 @@ cdf feacb dfbac dbfcga bfgda adgc dc fdebga gcefdb dbaegfc | gbeafd fabdcg dcf c
     }
 
     private static JList<String> parseTokens(String tokens) {
-        return JList.ofArray(tokens.split(" "));
+        return JList.ofArray(tokens.split(" "))
+                .map(A2021_08::sort);
+    }
+
+    private static String sort(String string) {
+        return Lists.charactersOf(string)
+                .sorted(Comparator.comparing(c -> c))
+                .reduce("", (s, c) -> s+c);
+
     }
 }
