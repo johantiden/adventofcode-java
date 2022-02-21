@@ -1,9 +1,15 @@
 package com.github.johantiden.adventofcode._2021;
 
 import com.github.johantiden.adventofcode.common.JList;
+import com.github.johantiden.adventofcode.common.JMap;
 import com.github.johantiden.adventofcode.common.Pair;
 
 public class A2021_08 {
+
+    static final String EXAMPLE_ONE_ROW =
+"""
+acedgfb cdfbe gcdfa fbcad dab cefabd cdfgeb eafb cagedb ab | cdfeb fcadb cdfeb cdbaf
+""";
 
     static final String EXAMPLE =
 """
@@ -237,10 +243,29 @@ cdf feacb dfbac dbfcga bfgda adgc dc fdebga gcefdb dbaegfc | gbeafd fabdcg dcf c
                 .size();
     }
 
-    static int b(String input) {
+    static long b(String input) {
         JList<Pair<JList<String>, JList<String>>> rows = parse(input);
 
-        return -1;
+        Long sum = rows
+                .map(row -> {
+                    JMap<Character, Segment> solution = deduce(row.left());
+                    return decode(solution, row.right());
+                })
+                .reduce(0L, Long::sum);
+
+        return sum;
+    }
+
+    private static long decode(JMap<Character, Segment> solution, JList<String> right) {
+        return -1L;
+    }
+
+    private static JMap<Character, Segment> deduce(JList<String> inputs) {
+        return JMap.empty();
+    }
+
+    private enum Segment {
+        A,B,C,D,E,F,G
     }
 
     private static JList<Pair<JList<String>, JList<String>>> parse(String input) {
@@ -252,7 +277,8 @@ cdf feacb dfbac dbfcga bfgda adgc dc fdebga gcefdb dbaegfc | gbeafd fabdcg dcf c
         JList<String> le = JList.ofArray(row.split(" \\| "));
         JList<JList<String>> tokenized = le
                 .map(A2021_08::parseTokens);
-        return new Pair<>(tokenized.get(0), tokenized.get(1));
+        JList<String> bothLists = tokenized.get(0).concat(tokenized.get(1)); // Notice the outputs are added to the input because they can also be used for deduction.
+        return new Pair<>(bothLists, tokenized.get(1));
     }
 
     private static JList<String> parseTokens(String tokens) {
