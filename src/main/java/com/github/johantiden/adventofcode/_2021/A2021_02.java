@@ -10,13 +10,13 @@ public class A2021_02 {
 
     static int a(JList<String> input) {
         Submarine submarineA = parse(input)
-                .reduce(Submarine.ZERO, A::move);
+                .reduce(Submarine.ZERO, A2021_02::moveA);
         return submarineA.x * submarineA.depth;
     }
 
     static int b(JList<String> input) {
         Submarine submarineB = parse(input)
-                .reduce(Submarine.ZERO, B::move);
+                .reduce(Submarine.ZERO, A2021_02::moveB);
         return submarineB.x * submarineB.depth;
     }
 
@@ -32,34 +32,29 @@ public class A2021_02 {
         );
     }
 
+    private static Submarine moveB(Submarine sub, Pair<String, Integer> command) {
+        Integer amplitude = command.right();
+
+        return switch (command.left()) {
+            case "forward" -> new Submarine(sub.x + amplitude, sub.depth + sub.aim*amplitude, sub.aim);
+            case "down" -> new Submarine(sub.x, sub.depth, sub.aim + amplitude);
+            case "up" -> new Submarine(sub.x, sub.depth, sub.aim - amplitude);
+            default -> throw new IllegalArgumentException();
+        };
+    }
+
+    private static Submarine moveA(Submarine sub, Pair<String, Integer> command) {
+        Integer amplitude = command.right();
+
+        return switch (command.left()) {
+            case "forward" -> new Submarine(sub.x + amplitude, sub.depth, 0);
+            case "down" -> new Submarine(sub.x, sub.depth + amplitude, 0);
+            case "up" -> new Submarine(sub.x, sub.depth - amplitude, 0);
+            default -> throw new IllegalArgumentException();
+        };
+    }
+
     private record Submarine(int x, int depth, int aim) {
         static final Submarine ZERO = new Submarine(0, 0, 0);
-    }
-
-    private static class A {
-
-        private static Submarine move(Submarine sub, Pair<String, Integer> command) {
-            Integer amplitude = command.right();
-
-            return switch (command.left()) {
-                case "forward" -> new Submarine(sub.x + amplitude, sub.depth, 0);
-                case "down" -> new Submarine(sub.x, sub.depth + amplitude, 0);
-                case "up" -> new Submarine(sub.x, sub.depth - amplitude, 0);
-                default -> throw new IllegalArgumentException();
-            };
-        }
-    }
-
-    private static class B {
-        private static Submarine move(Submarine sub, Pair<String, Integer> command) {
-            Integer amplitude = command.right();
-
-            return switch (command.left()) {
-                case "forward" -> new Submarine(sub.x + amplitude, sub.depth + sub.aim*amplitude, sub.aim);
-                case "down" -> new Submarine(sub.x, sub.depth, sub.aim + amplitude);
-                case "up" -> new Submarine(sub.x, sub.depth, sub.aim - amplitude);
-                default -> throw new IllegalArgumentException();
-            };
-        }
     }
 }
