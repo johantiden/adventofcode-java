@@ -126,7 +126,7 @@ public class A2021_09 {
     static long countLows(String input) {
         Matrix<Integer> heightMap = parse(input);
         Matrix<Boolean> convolution = findLows(heightMap);
-        return countIfTrue(convolution);
+        return convolution.countIf(Boolean::booleanValue);
     }
 
     static long a(String input) {
@@ -138,12 +138,8 @@ public class A2021_09 {
                 .map(pair -> pair.left() ? pair.right() : 0);
 
         int sum = Matrix.sum(masked);
-        int count = countIfTrue(convolution);
+        int count = convolution.countIf(Boolean::booleanValue);
         return sum + count;
-    }
-
-    private static int countIfTrue(Matrix<Boolean> convolution) {
-        return Matrix.sum(convolution.map(b -> b ? 1 : 0));
     }
 
     private static Matrix<Boolean> findLows(Matrix<Integer> heightMap) {

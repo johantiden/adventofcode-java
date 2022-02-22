@@ -176,6 +176,12 @@ public class Matrix<T> {
         }
     }
 
+    public int countIf(Predicate<T> predicate) {
+        Matrix<Integer> map = map(predicate::test)
+                .map(b -> b ? 1 : 0);
+        return sum(map);
+    }
+
     public enum Convolution {
         SHRINK_WITH_KERNEL,
         PRESERVE_SIZE
