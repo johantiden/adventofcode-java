@@ -126,8 +126,7 @@ public class A2021_09 {
     static long countLows(String input) {
         Matrix<Integer> heightMap = parse(input);
         Matrix<Boolean> convolution = findLows(heightMap);
-
-        return Matrix.sum(convolution.map(b -> b ? 1 : 0));
+        return countIfTrue(convolution);
     }
 
     static long a(String input) {
@@ -139,9 +138,13 @@ public class A2021_09 {
                 .map(pair -> pair.left() ? pair.right() : 0);
 
         int sum = Matrix.sum(masked);
-        return sum + countLows(input);
+        int count = countIfTrue(convolution);
+        return sum + count;
     }
 
+    private static int countIfTrue(Matrix<Boolean> convolution) {
+        return Matrix.sum(convolution.map(b -> b ? 1 : 0));
+    }
 
     private static Matrix<Boolean> findLows(Matrix<Integer> heightMap) {
         BiFunction<Integer, Integer, Boolean> zero = (in, neighbor) -> true;
@@ -154,9 +157,8 @@ public class A2021_09 {
 
         Function<Matrix<Boolean>, Boolean> reducer = window -> window.reduce(list -> list.reduce(Boolean::logicalAnd));
 
-        Matrix<Boolean> convolution = heightMap
+        return heightMap
                 .convolution(kernel, Matrix.Convolution.PRESERVE_SIZE, reducer,true, Integer.MAX_VALUE);
-        return convolution;
     }
 
     private static Integer nullAsMax(Integer neighbor) {
