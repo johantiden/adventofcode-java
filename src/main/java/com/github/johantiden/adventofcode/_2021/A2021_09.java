@@ -169,7 +169,7 @@ public class A2021_09 {
         Predicate<PointInt> isInSameBasin = p -> heightMap.getOrDefault(p, 9) < 9;
 
         JList<PointInt> morePoints = points
-                .flatMap(p -> neighbors4(p).filter(isInSameBasin))
+                .flatMap(p -> p.neighbors4().filter(isInSameBasin))
                 .concat(points)
                 .distinct();
 
@@ -178,15 +178,6 @@ public class A2021_09 {
         } else {
             return points;
         }
-    }
-
-    private static JList<PointInt> neighbors4(PointInt point) {
-        return JList.of(
-                point.plus(0, 1),
-                point.plus(1, 0),
-                point.plus(0, -1),
-                point.plus(-1, 0)
-        );
     }
 
     private static Matrix<Boolean> findLows(Matrix<Integer> heightMap) {
@@ -209,7 +200,7 @@ public class A2021_09 {
         return neighbor == null ? Integer.MAX_VALUE : neighbor;
     }
 
-    private static Matrix<Integer> parse(String input) {
+    static Matrix<Integer> parse(String input) {
         JList<JList<Integer>> listList = JList.ofArray(input.split("\n"))
                 .map(A2021_09::parseRow);
         return Matrix.of(listList);

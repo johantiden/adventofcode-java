@@ -59,7 +59,6 @@ public class Matrix<T> {
     }
 
     public <R> Matrix<R> mapWithCoordinates(Function<Pair<PointInt, T>, R> mapper) {
-        // TODO: Maybe redo as zip(allCoordinates(), this).map(mapper)
         return zip(allCoordinates(), this).map(mapper);
     }
 
@@ -76,10 +75,6 @@ public class Matrix<T> {
     }
 
     public <R> R reduce(Function<JList<T>, R> reducer) {
-        return reducer.apply(flatten());
-    }
-
-    public <R> R reduce(R identity, Function<JList<T>, R> reducer) {
         return reducer.apply(flatten());
     }
 
@@ -143,6 +138,10 @@ public class Matrix<T> {
         return with(coordinate.x(), coordinate.y(), value);
     }
 
+    public Matrix<T> with(PointInt coordinate, UnaryOperator<T> valueReplacer) {
+        return with(coordinate.x(), coordinate.y(), valueReplacer);
+    }
+
     public Matrix<T> with(int x, int y, UnaryOperator<T> valueReplacer) {
         return of(rows.with(y, row -> row.with(x, valueReplacer)));
     }
@@ -166,7 +165,7 @@ public class Matrix<T> {
             PointInt centerPositionInMatrix = pair.left();
             T centerValue = pair.right();
 
-            Matrix<R> window = Matrix.repeat(rZero, kernel.width(), kernel.height());
+            Matrix<R> window = repeat(rZero, kernel.width(), kernel.height());
             window = window.mapWithCoordinates(pair2 -> {
                 PointInt coordinateInKernel = pair2.left();
                 T neighborValue = getOrDefault(
@@ -187,10 +186,10 @@ public class Matrix<T> {
     }
 
     private T getOrDefault(int x, int y, T defaultValue) {
-        if (x < 0 || y < 0 || x >= width() || y >= height()) {
-            return defaultValue;
-        } else {
+        if (isInside(x, y)) {
             return get(x, y);
+        } else {
+            return defaultValue;
         }
     }
 
@@ -198,6 +197,14 @@ public class Matrix<T> {
         Matrix<Integer> map = map(predicate::test)
                 .map(b -> b ? 1 : 0);
         return sum(map);
+    }
+
+    public boolean isInside(PointInt coordinate) {
+        return isInside(coordinate.x(), coordinate.y());
+    }
+
+    public boolean isInside(int x, int y) {
+        return x >= 0 && y >= 0 && x < width() && y < height();
     }
 
     public enum Convolution {
