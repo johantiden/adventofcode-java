@@ -538,29 +538,21 @@ public class A2021_05 {
                 .filter(line -> isHorizontal(line) || isVertical(line))
                 .reduce(canvas, A2021_05::drawLine);
 
-        debug(canvas);
-
         return canvas
-                .flatten()
-                .filter(i -> i > 1)
-                .map(Integer::signum)
-                .reduce(0, Integer::sum);
+                .countIf(i -> i > 1);
     }
 
     static int b(String input) {
         JList<LineInt> lines = parse(input);
-
         Matrix<Integer> canvas = makeCanvasThatFitsAllLines(lines);
+
         canvas = lines
                 .reduce(canvas, A2021_05::drawLine);
 
         debug(canvas);
 
         return canvas
-                .flatten()
-                .filter(i -> i > 1)
-                .map(Integer::signum)
-                .reduce(0, Integer::sum);
+                .countIf(i -> i > 1);
     }
 
     @Nonnull
@@ -594,13 +586,13 @@ public class A2021_05 {
         for (int y = 0; y < matrix.height(); y++) {
             for (int x = 0; x < matrix.width(); x++) {
                 Integer value = matrix.get(x, y);
-                System.out.print(zeroToDot(value));
+                System.out.print(debugZeroToDot(value));
             }
             System.out.println();
         }
     }
 
-    private static String zeroToDot(Integer i) {
+    private static String debugZeroToDot(Integer i) {
         return i == 0 ? "." : String.valueOf(i);
     }
 
