@@ -102,11 +102,11 @@ public class Matrix<T> {
     }
 
     public boolean allRowsMatches(Predicate<JList<T>> rowPredicate) {
-        return rows.allMatch(rowPredicate);
+        return rows.allMatches(rowPredicate);
     }
 
     public boolean allMatches(Predicate<T> predicate) {
-        return allRowsMatches(row -> row.allMatch(predicate));
+        return allRowsMatches(row -> row.allMatches(predicate));
     }
 
     public int height() {

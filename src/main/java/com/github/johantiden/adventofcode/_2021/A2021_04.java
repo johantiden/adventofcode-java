@@ -692,7 +692,7 @@ public class A2021_04 {
     }
 
     private static boolean isWinner(JList<Integer> rowOrColumn, JList<Integer> generator) {
-        return rowOrColumn.allMatch(generator::contains);
+        return rowOrColumn.allMatches(generator::contains);
     }
 
     private static Bingo parse(String input) {

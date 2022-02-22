@@ -135,7 +135,7 @@ public class JList<T> {
     }
 
     public boolean containsAll(@Nonnull JList<T> list) {
-        return list.allMatch(this::contains);
+        return list.allMatches(this::contains);
     }
 
     public JList<T> plusAll(@Nonnull Collection<? extends T> c) {
@@ -278,7 +278,7 @@ public class JList<T> {
         );
     }
 
-    public boolean allMatch(Predicate<T> predicate) {
+    public boolean allMatches(Predicate<T> predicate) {
         return !anyMatch(predicate.negate());
     }
 
