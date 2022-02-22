@@ -10,10 +10,8 @@ public class A2021_06 {
     static long a(JList<Integer> input) {
         JList<Long> fishes = histogram(input);
 
-        //System.out.println("Initial state: " + fishes);
         for (int i = 1; i <= 80; i++) {
             fishes = dayHistogram(fishes);
-            //System.out.println("After\t"+i+" days: " + fishes);
         }
 
         return fishes.reduce(0L, Long::sum);
