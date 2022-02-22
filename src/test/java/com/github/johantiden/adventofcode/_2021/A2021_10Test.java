@@ -1,5 +1,6 @@
 package com.github.johantiden.adventofcode._2021;
 
+import com.github.johantiden.adventofcode.common.Lists;
 import org.junit.Test;
 
 import java.util.Optional;
@@ -15,6 +16,11 @@ public class A2021_10Test {
         assertThat(A2021_10.a(A2021_10.REAL), is(268845L));
     }
 
+    @Test
+    public void b() {
+        assertThat(A2021_10.b(A2021_10.EXAMPLE), is(288957L));
+        assertThat(A2021_10.b(A2021_10.REAL), is(4038824534L));
+    }
 
     @Test
     public void asdf() {
@@ -24,14 +30,10 @@ public class A2021_10Test {
         assertThat(A2021_10.findCorruptedCharacter("{()()()>"), is(Optional.of('>')));
         assertThat(A2021_10.findCorruptedCharacter("(((()))}"), is(Optional.of('}')));
         assertThat(A2021_10.findCorruptedCharacter("<([]){()}[{}])"), is(Optional.of(')')));
-
-
-
     }
 
     @Test
-    public void b() {
-//        assertThat(A2021_10.b(A2021_10.EXAMPLE), is(1134L));
-//        assertThat(A2021_10.b(A2021_10.REAL), is(4L));
+    public void testScore() {
+        assertThat(A2021_10.score(Lists.charactersOf("}}]])})]")), is(288957L));
     }
 }
