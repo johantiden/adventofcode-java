@@ -144,10 +144,9 @@ public class A2021_09 {
 
     private static Matrix<Boolean> findLows(Matrix<Integer> heightMap) {
         BiFunction<Integer, Integer, Boolean> zero = (in, neighbor) -> true;
-        Matrix<BiFunction<Integer, Integer, Boolean>> kernel = Matrix.repeat(zero, 3, 3);
+        BiFunction<Integer, Integer, Boolean> isLowerThanNeighbor = (center, neighbor) -> center < nullAsMax(neighbor);
 
-        BiFunction<Integer, Integer, Boolean> isLowerThanNeighbor = (center, neighbor) -> nullAsMax(neighbor) > center;
-        
+        Matrix<BiFunction<Integer, Integer, Boolean>> kernel = Matrix.repeat(zero, 3, 3);
         kernel = kernel.with(1, 0, isLowerThanNeighbor); // NORTH
         kernel = kernel.with(1, 2, isLowerThanNeighbor); // SOUTH
         kernel = kernel.with(0, 1, isLowerThanNeighbor); // WEST
