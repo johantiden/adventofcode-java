@@ -146,10 +146,12 @@ public class A2021_09 {
         BiFunction<Integer, Integer, Boolean> zero = (in, neighbor) -> true;
         Matrix<BiFunction<Integer, Integer, Boolean>> kernel = Matrix.repeat(zero, 3, 3);
 
-        kernel = kernel.with(1, 0, (in, neighbor) -> nullAsMax(neighbor) > in); // NORTH
-        kernel = kernel.with(1, 2, (in, neighbor) -> nullAsMax(neighbor) > in); // SOUTH
-        kernel = kernel.with(0, 1, (in, neighbor) -> nullAsMax(neighbor) > in); // WEST
-        kernel = kernel.with(2, 1, (in, neighbor) -> nullAsMax(neighbor) > in); // EAST
+        BiFunction<Integer, Integer, Boolean> isLowerThanNeighbor = (center, neighbor) -> nullAsMax(neighbor) > center;
+        
+        kernel = kernel.with(1, 0, isLowerThanNeighbor); // NORTH
+        kernel = kernel.with(1, 2, isLowerThanNeighbor); // SOUTH
+        kernel = kernel.with(0, 1, isLowerThanNeighbor); // WEST
+        kernel = kernel.with(2, 1, isLowerThanNeighbor); // EAST
 
         Function<Matrix<Boolean>, Boolean> reducer = window -> window.reduce(list -> list.reduce(Boolean::logicalAnd));
 
