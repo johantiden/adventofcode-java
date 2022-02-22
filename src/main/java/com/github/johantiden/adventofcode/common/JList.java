@@ -181,6 +181,11 @@ public class JList<T> {
         return new JList<>(inner.stream().map(mapper).toList());
     }
 
+    public <R> JList<R> mapWithCoordinates(Function<Pair<Integer, T>, R> mapper) {
+        JList<Pair<Integer, T>> zip = zip( Lists.range(size()), this);
+        return zip.map(mapper);
+    }
+
     public <R> JList<R> mapMulti(BiConsumer<? super T, Consumer<R>> mapper) {
         return new JList<R>(inner.stream().mapMulti(mapper).toList());
     }
@@ -201,6 +206,12 @@ public class JList<T> {
         }
 
         return value;
+    }
+
+    public T reduce(BinaryOperator<T> mapper) {
+        return inner.stream()
+                .reduce(mapper)
+                .orElseThrow();
     }
 
     @Override

@@ -1,5 +1,6 @@
 package com.github.johantiden.adventofcode.common;
 
+import java.util.function.BiFunction;
 import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.function.UnaryOperator;
@@ -14,6 +15,25 @@ public class Matrix<T> {
 
     public static <T> Matrix<T> repeat(T value, int width, int height) {
         return of(JList.repeat(JList.repeat(value, width), height));
+    }
+
+    public  Matrix<PointInt> allCoordinates() {
+        return of(rows.mapWithCoordinates(pair -> pair.right().mapWithCoordinates(pair2 -> {
+            Integer x = pair2.left();
+            Integer y = pair.left();
+            return new PointInt(x, y);
+        })));
+    }
+
+    public static <A, B> Matrix<Pair<A, B>> zip(Matrix<A> a, Matrix<B> b) {
+        return a.allCoordinates()
+                .map(coordinate -> {
+                    return new Pair<>(a.get(coordinate), b.get(coordinate));
+                });
+    }
+
+    private T get(PointInt coordinate) {
+        return get(coordinate.x(), coordinate.y());
     }
 
     public Matrix<T> transpose() {
@@ -40,6 +60,11 @@ public class Matrix<T> {
         return of(rows.map(row -> row.map(mapper)));
     }
 
+    public <R> Matrix<R> mapWithCoordinates(Function<Pair<PointInt, T>, R> mapper) {
+        // TODO: Maybe redo as zip(allCoordinates(), this).map(mapper)
+        return zip(allCoordinates(), this).map(mapper);
+    }
+
     public static <T> Matrix<T> of(JList<JList<T>> inner) {
         return new Matrix<>(inner);
     }
@@ -50,6 +75,18 @@ public class Matrix<T> {
 
     public <R> JList<R> reduceRows(Function<JList<T>, R> reducer) {
         return rows.map(reducer);
+    }
+
+    public <R> R reduce(Function<JList<T>, R> reducer) {
+        return reducer.apply(flatten());
+    }
+
+    public <R> R reduce(R identity, Function<JList<T>, R> reducer) {
+        return reducer.apply(flatten());
+    }
+
+    public static int sum(Matrix<Integer> intMatrix) {
+        return intMatrix.reduceRows(row -> row.reduce(0, Integer::sum)).reduce(0, Integer::sum);
     }
 
     public JList<T> flatten() {
@@ -101,5 +138,46 @@ public class Matrix<T> {
      */
     public Matrix<T> tailRight() {
         return of(rows.map(JList::tail));
+    }
+
+    public <R> Matrix<R> convolution(Matrix<BiFunction<T, T, R>> kernel, Convolution convolution, Function<Matrix<R>, R> windowReducer, R rZero, T tZero) {
+        if (convolution != Convolution.PRESERVE_SIZE) {
+            throw new UnsupportedOperationException();
+        }
+
+        int kernelRadiusX = kernel.width() / 2;
+        int kernelRadiusY = kernel.height() / 2;
+
+        Matrix<Matrix<R>> windows = mapWithCoordinates(pair -> {
+            PointInt centerPositionInMatrix = pair.left();
+            T centerValue = pair.right();
+
+            Matrix<R> window = Matrix.repeat(rZero, kernel.width(), kernel.height());
+            window = window.mapWithCoordinates(pair2 -> {
+                PointInt coordinateInKernel = pair2.left();
+                T neighborValue = getOrDefault(
+                        centerPositionInMatrix.x() + coordinateInKernel.x() - kernelRadiusX,
+                        centerPositionInMatrix.y() + coordinateInKernel.y() - kernelRadiusY,
+                        tZero
+                );
+                return kernel.get(coordinateInKernel.x(), coordinateInKernel.y()).apply(centerValue, neighborValue);
+            });
+            return window;
+        });
+
+        return windows.map(windowReducer);
+    }
+
+    private T getOrDefault(int x, int y, T defaultValue) {
+        if (x < 0 || y < 0 || x >= width() || y >= height()) {
+            return defaultValue;
+        } else {
+            return get(x, y);
+        }
+    }
+
+    public enum Convolution {
+        SHRINK_WITH_KERNEL,
+        PRESERVE_SIZE
     }
 }
