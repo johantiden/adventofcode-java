@@ -20,14 +20,14 @@ public class A2021_02 {
         return submarineB.x * submarineB.depth;
     }
 
-    private static JList<Pair<Command, Integer>> parse(JList<String> input) {
+    private static JList<Pair<String, Integer>> parse(JList<String> input) {
         return input.map(A2021_02::parse);
     }
 
-    private static Pair<Command, Integer> parse(String row) {
+    private static Pair<String, Integer> parse(String row) {
         String[] s = row.split(" ");
         return new Pair<>(
-                Command.valueOf(s[0].toUpperCase()),
+                s[0],
                 Integer.valueOf(s[1])
         );
     }
@@ -36,33 +36,29 @@ public class A2021_02 {
         static final Submarine ZERO = new Submarine(0, 0, 0);
     }
 
-    private enum Command {
-        FORWARD,
-        DOWN,
-        UP
-    }
-
     private static class A {
 
-        private static Submarine move(Submarine sub, Pair<Command, Integer> command) {
+        private static Submarine move(Submarine sub, Pair<String, Integer> command) {
             Integer amplitude = command.right();
 
             return switch (command.left()) {
-                case FORWARD -> new Submarine(sub.x + amplitude, sub.depth, 0);
-                case DOWN -> new Submarine(sub.x, sub.depth + amplitude, 0);
-                case UP -> new Submarine(sub.x, sub.depth - amplitude, 0);
+                case "forward" -> new Submarine(sub.x + amplitude, sub.depth, 0);
+                case "down" -> new Submarine(sub.x, sub.depth + amplitude, 0);
+                case "up" -> new Submarine(sub.x, sub.depth - amplitude, 0);
+                default -> throw new IllegalArgumentException();
             };
         }
     }
 
     private static class B {
-        private static Submarine move(Submarine sub, Pair<Command, Integer> command) {
+        private static Submarine move(Submarine sub, Pair<String, Integer> command) {
             Integer amplitude = command.right();
 
             return switch (command.left()) {
-                case FORWARD -> new Submarine(sub.x + amplitude, sub.depth + sub.aim*amplitude, sub.aim);
-                case DOWN -> new Submarine(sub.x, sub.depth, sub.aim + amplitude);
-                case UP -> new Submarine(sub.x, sub.depth, sub.aim - amplitude);
+                case "forward" -> new Submarine(sub.x + amplitude, sub.depth + sub.aim*amplitude, sub.aim);
+                case "down" -> new Submarine(sub.x, sub.depth, sub.aim + amplitude);
+                case "up" -> new Submarine(sub.x, sub.depth, sub.aim - amplitude);
+                default -> throw new IllegalArgumentException();
             };
         }
     }
