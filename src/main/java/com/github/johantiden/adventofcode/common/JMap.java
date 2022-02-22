@@ -96,8 +96,23 @@ public class JMap<K, V> {
 
     public JMap<K, V> with(K key, UnaryOperator<V> valueMapper) {
         HashMap<K, V> newInner = new HashMap<>(inner);
-        V newValue = valueMapper.apply(inner.get(key));
+        V existing = inner.get(key);
+        if (existing == null) {
+            throw new IllegalStateException("You cannot use a mapper only, when the JMap is missing the key! Please populate the JMap with all possible values or use the overload that takes a defaultValue");
+        }
+        V newValue = valueMapper.apply(existing);
         newInner.put(key, newValue);
+        return new JMap<>(newInner);
+    }
+
+    public JMap<K, V> with(K key, V defaultValue, UnaryOperator<V> valueMapper) {
+        HashMap<K, V> newInner = new HashMap<>(inner);
+        V existing = inner.get(key);
+        if (existing == null) {
+            newInner.put(key, valueMapper.apply(defaultValue));
+        } else {
+            newInner.put(key, valueMapper.apply(existing));
+        }
         return new JMap<>(newInner);
     }
 

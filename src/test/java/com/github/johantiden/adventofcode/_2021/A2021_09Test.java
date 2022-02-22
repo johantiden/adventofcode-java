@@ -18,7 +18,7 @@ public class A2021_09Test {
     @Test
     public void b() {
         assertThat(A2021_09.b(A2021_09.EXAMPLE), is(1134L));
-        assertThat(A2021_09.b(A2021_09.REAL), is(4L));
+        assertThat(A2021_09.b(A2021_09.REAL), is(1148965L));
     }
 
     @Test
