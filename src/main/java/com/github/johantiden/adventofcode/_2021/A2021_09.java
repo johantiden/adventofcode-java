@@ -152,7 +152,7 @@ public class A2021_09 {
         kernel = kernel.with(0, 1, isLowerThanNeighbor); // WEST
         kernel = kernel.with(2, 1, isLowerThanNeighbor); // EAST
 
-        Function<Matrix<Boolean>, Boolean> reducer = window -> window.reduce(list -> list.reduce(Boolean::logicalAnd));
+        Function<Matrix<Boolean>, Boolean> reducer = window -> window.allMatches(Boolean::booleanValue); // AND
 
         return heightMap
                 .convolution(kernel, Matrix.Convolution.PRESERVE_SIZE, reducer,true, Integer.MAX_VALUE);
