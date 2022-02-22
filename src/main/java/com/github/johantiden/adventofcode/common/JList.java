@@ -341,7 +341,7 @@ public class JList<T> {
                 .distinct();
     }
 
-    private JList<T> distinct() {
+    public JList<T> distinct() {
         return new JList<>(inner.stream().distinct().toList());
     }
 

@@ -4,9 +4,12 @@ import com.github.johantiden.adventofcode.common.JList;
 import com.github.johantiden.adventofcode.common.Lists;
 import com.github.johantiden.adventofcode.common.Matrix;
 import com.github.johantiden.adventofcode.common.Pair;
+import com.github.johantiden.adventofcode.common.PointInt;
 
+import java.util.Comparator;
 import java.util.function.BiFunction;
 import java.util.function.Function;
+import java.util.function.Predicate;
 
 public class A2021_09 {
 
@@ -125,21 +128,65 @@ public class A2021_09 {
 
     static long countLows(String input) {
         Matrix<Integer> heightMap = parse(input);
-        Matrix<Boolean> convolution = findLows(heightMap);
-        return convolution.countIf(Boolean::booleanValue);
+        Matrix<Boolean> lows = findLows(heightMap);
+        return lows.countIf(Boolean::booleanValue);
     }
 
     static long a(String input) {
         Matrix<Integer> heightMap = parse(input);
-        Matrix<Boolean> convolution = findLows(heightMap);
+        Matrix<Boolean> lows = findLows(heightMap);
 
-        Matrix<Pair<Boolean, Integer>> zip = Matrix.zip(convolution, heightMap);
+        Matrix<Pair<Boolean, Integer>> zip = Matrix.zip(lows, heightMap);
         Matrix<Integer> masked = zip
                 .map(pair -> pair.left() ? pair.right() : 0);
 
         int sum = Matrix.sum(masked);
-        int count = convolution.countIf(Boolean::booleanValue);
+        int count = lows.countIf(Boolean::booleanValue);
         return sum + count;
+    }
+
+    static long b(String input) {
+        Matrix<Integer> heightMap = parse(input);
+        Matrix<Boolean> lows = findLows(heightMap);
+
+        JList<PointInt> lowests = Matrix.zip(lows.allCoordinates(), lows)
+                .filter(Pair::right)
+                .map(Pair::left);
+
+        return lowests
+                .map(lowest -> calculateSizeOfBasin(lowest, heightMap))
+                .sorted(Comparator.<Integer, Integer>comparing(i -> i).reversed())
+                .head(3)
+                .reduce(1, (a, b) -> a*b);
+    }
+
+    private static Integer calculateSizeOfBasin(PointInt lowest, Matrix<Integer> heightMap) {
+        JList<PointInt> pointsInBasin = findNeighborsRecursive(JList.of(lowest), heightMap);
+        return pointsInBasin.size();
+    }
+
+    private static JList<PointInt> findNeighborsRecursive(JList<PointInt> points, Matrix<Integer> heightMap) {
+        Predicate<PointInt> isInSameBasin = p -> heightMap.getOrDefault(p, 9) < 9;
+
+        JList<PointInt> morePoints = points
+                .flatMap(p -> neighbors4(p).filter(isInSameBasin))
+                .concat(points)
+                .distinct();
+
+        if (morePoints.size() > points.size()) {
+            return findNeighborsRecursive(morePoints, heightMap);
+        } else {
+            return points;
+        }
+    }
+
+    private static JList<PointInt> neighbors4(PointInt point) {
+        return JList.of(
+                point.plus(0, 1),
+                point.plus(1, 0),
+                point.plus(0, -1),
+                point.plus(-1, 0)
+        );
     }
 
     private static Matrix<Boolean> findLows(Matrix<Integer> heightMap) {

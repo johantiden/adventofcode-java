@@ -16,11 +16,16 @@ public class A2021_09Test {
     }
 
     @Test
+    public void b() {
+        assertThat(A2021_09.b(A2021_09.EXAMPLE), is(1134L));
+        assertThat(A2021_09.b(A2021_09.REAL), is(4L));
+    }
+
+    @Test
     public void testTrivialInput() {
         // There are no neighbors, so this is the lowest
         assertThat(A2021_09.countLows("1"), is(1L));
     }
-
 
     @Test
     public void testParseRow() {

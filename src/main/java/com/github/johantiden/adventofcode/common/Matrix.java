@@ -27,12 +27,10 @@ public class Matrix<T> {
 
     public static <A, B> Matrix<Pair<A, B>> zip(Matrix<A> a, Matrix<B> b) {
         return a.allCoordinates()
-                .map(coordinate -> {
-                    return new Pair<>(a.get(coordinate), b.get(coordinate));
-                });
+                .map(coordinate -> new Pair<>(a.get(coordinate), b.get(coordinate)));
     }
 
-    private T get(PointInt coordinate) {
+    public T get(PointInt coordinate) {
         return get(coordinate.x(), coordinate.y());
     }
 
@@ -129,12 +127,20 @@ public class Matrix<T> {
         return of(rows.filter(rowPredicate));
     }
 
+    public JList<T> filter(Predicate<T> predicate) {
+        return flatten().filter(predicate);
+    }
+
     public T get(int x, int y) {
         return getRow(y).get(x);
     }
 
     public Matrix<T> with(int x, int y, T value) {
         return of(rows.with(y, row -> row.with(x, value)));
+    }
+
+    public Matrix<T> with(PointInt coordinate, T value) {
+        return with(coordinate.x(), coordinate.y(), value);
     }
 
     public Matrix<T> with(int x, int y, UnaryOperator<T> valueReplacer) {
@@ -174,6 +180,10 @@ public class Matrix<T> {
         });
 
         return windows.map(windowReducer);
+    }
+
+    public T getOrDefault(PointInt coordinate, T defaultValue) {
+        return getOrDefault(coordinate.x(), coordinate.y(), defaultValue);
     }
 
     private T getOrDefault(int x, int y, T defaultValue) {
