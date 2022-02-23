@@ -102,7 +102,7 @@ DD-ko
         assertThat(A2021_12.b(SLIGHTLY_LARGER_EXAMPLE), is(103L));
         assertThat(A2021_12.b(EVEN_LARGER_EXAMPLE), is(3509L));
 
-        assertThat(A2021_12.b(REAL), is(-1L));
+        assertThat(A2021_12.b(REAL), is(89592L));
     }
 
 

@@ -62,7 +62,7 @@ public class A2021_12 {
         }
 
         private static Graph pruneLowercaseWhenLeavingIt(WalkState walkState, String leaving) {
-            if (isLowercase(leaving)) {
+            if (isSmallCave(leaving)) {
                 return walkState.graph.withoutNode(leaving);
             } else {
                 return walkState.graph;
@@ -70,16 +70,34 @@ public class A2021_12 {
         }
 
         private static Graph pruneLowercaseWhenLeavingItAndHasBeenThereTwice(WalkState walkState, String leaving) {
-            boolean hasBeenThereTwice = walkState.pathSoFar.filter(node -> node.equals(leaving)).size() == 2;
-            boolean allowedToGoBackAgain = !(isLowercase(leaving) && hasBeenThereTwice) && !leaving.equals("start") && !leaving.equals("end");
-            if (!allowedToGoBackAgain) {
+            if (leaving.equals("start") || leaving.equals("end")) {
                 return walkState.graph.withoutNode(leaving);
+            }
+
+            if (!isSmallCave(leaving)) {
+                return walkState.graph;
+            }
+
+            JList<String> smallCavesSoFar = walkState.pathSoFar
+                    .filter(WalkState::isSmallCave);
+            boolean hasBeenToASmallCaveTwice = hasBeenToASmallCaveTwice(smallCavesSoFar);
+            if (hasBeenToASmallCaveTwice) {
+                return smallCavesSoFar
+                        .distinct()
+                        .reduce(walkState.graph, Graph::withoutNode);
             } else {
                 return walkState.graph;
             }
         }
 
-        private static boolean isLowercase(String step) {
+        private static boolean hasBeenToASmallCaveTwice(JList<String> pathSoFar) {
+            boolean hasBeenToASmallCaveTwice = pathSoFar
+                    .filter(WalkState::isSmallCave)
+                    .anyMatch(cave -> pathSoFar.filter(c -> c.equals(cave)).size() == 2);
+            return hasBeenToASmallCaveTwice;
+        }
+
+        private static boolean isSmallCave(String step) {
             return step.toLowerCase().equals(step);
         }
     }
