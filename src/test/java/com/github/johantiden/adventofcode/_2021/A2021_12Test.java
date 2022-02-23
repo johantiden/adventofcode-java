@@ -2,7 +2,7 @@ package com.github.johantiden.adventofcode._2021;
 
 import com.github.johantiden.adventofcode.common.graph.Edge;
 import com.github.johantiden.adventofcode.common.graph.Graph;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;

@@ -1,7 +1,7 @@
 package com.github.johantiden.adventofcode._2021;
 
 import com.github.johantiden.adventofcode.common.Lists;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.util.Optional;
 

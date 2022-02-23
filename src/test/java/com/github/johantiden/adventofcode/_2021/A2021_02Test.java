@@ -1,9 +1,10 @@
 package com.github.johantiden.adventofcode._2021;
 
-import org.junit.Test;
 
-import static org.hamcrest.CoreMatchers.is;
+import org.junit.jupiter.api.Test;
+
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.is;
 
 public class A2021_02Test {
 

@@ -1,7 +1,7 @@
 package com.github.johantiden.adventofcode._2021;
 
 import com.github.johantiden.adventofcode.common.JList;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.util.Comparator;
 
@@ -14,8 +14,8 @@ import static com.github.johantiden.adventofcode._2021.A2021_03.calculateLifeSup
 import static com.github.johantiden.adventofcode._2021.A2021_03.calculateOxygenGeneratorRating;
 import static com.github.johantiden.adventofcode._2021.A2021_03.calculatePowerConsumption;
 import static com.github.johantiden.adventofcode._2021.A2021_03.parse;
-import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.is;
 
 public class A2021_03Test {
 
