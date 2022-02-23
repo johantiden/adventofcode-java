@@ -1,5 +1,6 @@
 package com.github.johantiden.adventofcode._2021;
 
+import com.github.johantiden.adventofcode.common.Input;
 import com.github.johantiden.adventofcode.common.JList;
 import com.github.johantiden.adventofcode.common.LineInt;
 import com.github.johantiden.adventofcode.common.Lists;
@@ -626,7 +627,7 @@ public class A2021_05 {
     }
 
     private static JList<LineInt> parse(String input) {
-        JList<String> rows = JList.ofArray(input.split("\n"));
+        JList<String> rows = Input.splitRows(input);
         return rows
                 .map(A2021_05::parseRow);
     }
