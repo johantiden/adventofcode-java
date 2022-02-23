@@ -134,13 +134,13 @@ public class A2021_10 {
             .with('>', 4);
 
     static long a(String input) {
-        return JList.ofArray(input.split("\n"))
+        return JList.of(input.split("\n"))
                 .map(A2021_10::findScore)
                 .reduce(Integer::sum);
     }
 
     static long b(String input) {
-        return JList.ofArray(input.split("\n"))
+        return JList.of(input.split("\n"))
                 .filter(row -> findCorruptedCharacter(row).isEmpty())
                 .map(A2021_10::reduceAsFarAsPossible)
                 .map(A2021_10::findClosingSequence)

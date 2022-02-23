@@ -696,7 +696,7 @@ public class A2021_04 {
     }
 
     private static Bingo parse(String input) {
-        JList<String> split = JList.ofArray(input.split("\n\n"));
+        JList<String> split = JList.of(input.split("\n\n"));
         JList<Integer> generator = parseGenerator(split.get(0));
 
         JList<Bingo.Board> boards = split.tail()
@@ -706,9 +706,9 @@ public class A2021_04 {
     }
 
     private static Bingo.Board parseBoard(String boardString) {
-        JList<String> rows = JList.ofArray(boardString.split("\n"));
+        JList<String> rows = JList.of(boardString.split("\n"));
 
-        Matrix<String> matrix = Matrix.of(rows.map(r -> JList.ofArray(r.trim().split(" +"))));
+        Matrix<String> matrix = Matrix.of(rows.map(r -> JList.of(r.trim().split(" +"))));
 
         Matrix<Integer> intMatrix = matrix.map(Integer::parseInt);
 
@@ -716,7 +716,7 @@ public class A2021_04 {
     }
 
     private static JList<Integer> parseGenerator(String s) {
-        JList<String> split = JList.ofArray(s.split(","));
+        JList<String> split = JList.of(s.split(","));
         return split
                 .map(Integer::parseInt);
     }

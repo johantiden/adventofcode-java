@@ -633,7 +633,7 @@ public class A2021_05 {
     }
 
     private static LineInt parseRow(String row) {
-        JList<Integer> coordinates = JList.ofArray(row.replace(" -> ", ",").split(","))
+        JList<Integer> coordinates = JList.of(row.replace(" -> ", ",").split(","))
                 .map(Integer::parseInt);
         return new LineInt(
                 new PointInt(coordinates.get(0), coordinates.get(1)),

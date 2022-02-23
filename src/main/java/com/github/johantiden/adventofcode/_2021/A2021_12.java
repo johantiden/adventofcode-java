@@ -110,7 +110,7 @@ public class A2021_12 {
     }
 
     static Edge parseRow(String input) {
-        JList<String> split = JList.ofArray(input.split("-"));
+        JList<String> split = JList.of(input.split("-"));
         return new Edge(
                 split.get(0),
                 split.get(1)

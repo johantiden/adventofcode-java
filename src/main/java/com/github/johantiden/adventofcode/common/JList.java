@@ -1,7 +1,6 @@
 package com.github.johantiden.adventofcode.common;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.Comparator;
 import java.util.List;
@@ -29,8 +28,8 @@ public class JList<T> {
     public static <L, R> JList<Pair<L, R>> zip(JList<L> left, JList<R> right) {
         if (left.size() != right.size()) {
             throw new IllegalArgumentException("zip requires both lists to be of equal length! "
-                    + "left.size()="+left.size() + ", "
-                    + "right.size()="+right.size());
+                    + "left.size()=" + left.size() + ", "
+                    + "right.size()=" + right.size());
         }
 
         ArrayList<Pair<L, R>> newInner = new ArrayList<>(left.size());
@@ -40,12 +39,6 @@ public class JList<T> {
         }
 
         return new JList<>(newInner);
-    }
-
-    public static <T> JList<T> ofArray(T[] array) {
-        return new JList<>(
-                Arrays.asList(array)
-        );
     }
 
     public static <T> JList<T> copyOf(Collection<T> list) {
@@ -145,7 +138,6 @@ public class JList<T> {
         newInner.addAll(c);
 
         return new JList<>(newInner);
-
     }
 
     public T get(int index) {
@@ -156,8 +148,42 @@ public class JList<T> {
         return inner.indexOf(o);
     }
 
-    public static <T> JList<T> of(T... values) {
-        return new JList<T>(List.<T>of(values));
+    public static <T> JList<T> of() {
+        return new JList<T>(List.<T>of());
+    }
+
+    public static <T> JList<T> of(T a) {
+        return new JList<>(List.of(a));
+    }
+
+    public static <T> JList<T> of(T a, T b) {
+        return new JList<>(List.of(a, b));
+    }
+
+    public static <T> JList<T> of(T a, T b, T c) {
+        return new JList<>(List.of(a, b, c));
+    }
+
+    public static <T> JList<T> of(T a, T b, T c, T d) {
+        return new JList<>(List.of(a, b, c, d));
+    }
+
+    public static <T> JList<T> of(T a, T b, T c, T d, T e) {
+        return new JList<>(List.of(a, b, c, d, e));
+    }
+
+    public static <T> JList<T> of(T a, T b, T c, T d, T e, T f) {
+        return new JList<>(List.of(a, b, c, d, e, f));
+    }
+
+
+    public static <T> JList<T> of(T a, T b, T c, T d, T e, T f, T g) {
+        return new JList<>(List.of(a, b, c, d, e, f, g));
+    }
+
+    public static <T> JList<T> of(T[] values) {
+        List<T> values1 = List.<T>of(values);
+        return new JList<T>(values1);
     }
 
     public Stream<T> stream() {
@@ -182,7 +208,7 @@ public class JList<T> {
     }
 
     public <R> JList<R> mapWithCoordinates(Function<Pair<Integer, T>, R> mapper) {
-        JList<Pair<Integer, T>> zip = zip( Lists.range(size()), this);
+        JList<Pair<Integer, T>> zip = zip(Lists.range(size()), this);
         return zip.map(mapper);
     }
 
@@ -241,7 +267,7 @@ public class JList<T> {
     }
 
     public <U extends Comparable<? super U>> T min(Function<T, U> keyExtractor) {
-       return min(Comparator.comparing(keyExtractor));
+        return min(Comparator.comparing(keyExtractor));
     }
 
     public T min(Comparator<T> comparator) {
@@ -251,7 +277,7 @@ public class JList<T> {
     }
 
     public <U extends Comparable<? super U>> T max(Function<T, U> keyExtractor) {
-       return max(Comparator.comparing(keyExtractor));
+        return max(Comparator.comparing(keyExtractor));
     }
 
     public T max(Comparator<T> comparator) {

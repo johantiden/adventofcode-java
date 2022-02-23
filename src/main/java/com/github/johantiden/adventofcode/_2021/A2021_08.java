@@ -298,19 +298,18 @@ cdf feacb dfbac dbfcga bfgda adgc dc fdebga gcefdb dbaegfc | gbeafd fabdcg dcf c
                 return inputState;
             }
 
-            JList<UnaryOperator<State>> deducers = JList.of(
-                    Deducer::moveToDeducedIfOnlyOneHypothesisLeft,
-                    state -> solveIfLengthEquals(state, 2, 1),
-                    state -> solveIfLengthEquals(state, 3, 7),
-                    state -> solveIfLengthEquals(state, 7, 8),
-                    state -> solveIfLengthEquals(state, 4, 4),
-                    state -> reduceIfLengthEquals(state, 5, JList.of(2, 3, 5)),
-                    state -> reduceIfLengthEquals(state, 6, JList.of(0, 6, 9)),
-                    Deducer::removeAsHypothesisIfAlreadySolved,
-                    state -> ifContainsOnlyTheseAreValid(state, 1, JList.of(0, 1, 3, 4, 7, 8, 9)),
-                    state -> ifContainsOnlyTheseAreValid(state, 4, JList.of(4, 8, 9)),
-                    state -> ifContainedOnlyTheseAreValid(state, 6, JList.of(5, 6))
-            );
+            JList<UnaryOperator<State>> deducers = JList.<UnaryOperator<State>>of()
+                    .plus(Deducer::moveToDeducedIfOnlyOneHypothesisLeft)
+            .plus(state -> solveIfLengthEquals(state, 2, 1))
+            .plus(state -> solveIfLengthEquals(state, 3, 7))
+            .plus(state -> solveIfLengthEquals(state, 7, 8))
+            .plus(state -> solveIfLengthEquals(state, 4, 4))
+            .plus(state -> reduceIfLengthEquals(state, 5, JList.of(2, 3, 5)))
+            .plus(state -> reduceIfLengthEquals(state, 6, JList.of(0, 6, 9)))
+            .plus(Deducer::removeAsHypothesisIfAlreadySolved)
+            .plus(state -> ifContainsOnlyTheseAreValid(state, 1, JList.of(0, 1, 3, 4, 7, 8, 9)))
+            .plus(state -> ifContainsOnlyTheseAreValid(state, 4, JList.of(4, 8, 9)))
+            .plus(state -> ifContainedOnlyTheseAreValid(state, 6, JList.of(5, 6))            );
 
 
             State state = deducers
@@ -418,12 +417,12 @@ cdf feacb dfbac dbfcga bfgda adgc dc fdebga gcefdb dbaegfc | gbeafd fabdcg dcf c
 
 
     private static JList<Pair<JList<String>, JList<String>>> parse(String input) {
-        JList<String> rows = JList.ofArray(input.split("\\n"));
+        JList<String> rows = JList.of(input.split("\\n"));
         return rows.map(A2021_08::parseRow);
     }
 
     private static Pair<JList<String>, JList<String>> parseRow(String row) {
-        JList<String> le = JList.ofArray(row.split(" \\| "));
+        JList<String> le = JList.of(row.split(" \\| "));
         JList<JList<String>> tokenized = le
                 .map(A2021_08::parseTokens);
         JList<String> bothLists = tokenized.get(0).concat(tokenized.get(1)); // Notice the outputs are added to the input because they can also be used for deduction.
@@ -431,7 +430,7 @@ cdf feacb dfbac dbfcga bfgda adgc dc fdebga gcefdb dbaegfc | gbeafd fabdcg dcf c
     }
 
     private static JList<String> parseTokens(String tokens) {
-        return JList.ofArray(tokens.split(" "))
+        return JList.of(tokens.split(" "))
                 .map(A2021_08::sort);
     }
 

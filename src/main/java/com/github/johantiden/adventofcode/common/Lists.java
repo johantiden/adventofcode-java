@@ -21,19 +21,19 @@ public class Lists {
     }
 
     public static JList<Integer> range(int startInclusive, int endExclusive) {
-        return new JList(IntStream.range(startInclusive, endExclusive).boxed().toList());
+        return new JList<>(IntStream.range(startInclusive, endExclusive).boxed().toList());
     }
 
     public static JList<Integer> range(int endExclusive) {
-        return new JList(IntStream.range(0, endExclusive).boxed().toList());
+        return new JList<>(IntStream.range(0, endExclusive).boxed().toList());
     }
 
     public static JList<Integer> rangeClosed(int endInclusive) {
-        return new JList(IntStream.rangeClosed(0, endInclusive).boxed().toList());
+        return new JList<>(IntStream.rangeClosed(0, endInclusive).boxed().toList());
     }
 
     public static JList<Integer> rangeClosed(int startInclusive, int endInclusive) {
-        return new JList(IntStream.rangeClosed(startInclusive, endInclusive).boxed().toList());
+        return new JList<>(IntStream.rangeClosed(startInclusive, endInclusive).boxed().toList());
     }
 
     public static JList<Integer> ints(int start, UnaryOperator<Integer> next, int size) {

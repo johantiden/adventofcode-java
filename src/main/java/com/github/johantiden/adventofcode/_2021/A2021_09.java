@@ -201,7 +201,7 @@ public class A2021_09 {
     }
 
     static Matrix<Integer> parse(String input) {
-        JList<JList<Integer>> listList = JList.ofArray(input.split("\n"))
+        JList<JList<Integer>> listList = JList.of(input.split("\n"))
                 .map(A2021_09::parseRow);
         return Matrix.of(listList);
     }
