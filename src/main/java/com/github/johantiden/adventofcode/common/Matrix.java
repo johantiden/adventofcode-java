@@ -1,23 +1,23 @@
 package com.github.johantiden.adventofcode.common;
 
 import java.util.function.BiFunction;
+import java.util.function.BinaryOperator;
 import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.function.UnaryOperator;
 
-public class Matrix<T> {
+public record Matrix<T>(JList<JList<T>> rows) {
 
-    private final JList<JList<T>> rows;
-
-    protected Matrix(JList<JList<T>> rows) {
-        this.rows = rows;
+    public static <T> Matrix<T> blend(Matrix<T> a, Matrix<T> b, BinaryOperator<T> blender) {
+        return a.allCoordinates()
+                .map(c -> blender.apply(a.get(c), b.get(c)));
     }
 
     public static <T> Matrix<T> repeat(T value, int width, int height) {
         return of(JList.repeat(JList.repeat(value, width), height));
     }
 
-    public  Matrix<PointInt> allCoordinates() {
+    public Matrix<PointInt> allCoordinates() {
         return of(rows.mapWithCoordinates(pair -> pair.right().mapWithCoordinates(pair2 -> {
             Integer x = pair2.left();
             Integer y = pair.left();
@@ -118,6 +118,10 @@ public class Matrix<T> {
         return of(indices.map(this::getRow));
     }
 
+    public Matrix<T> getColumns(JList<Integer> indices) {
+        return of(indices.map(this::getColumn));
+    }
+
     public Matrix<T> filterRows(Predicate<JList<T>> rowPredicate) {
         return of(rows.filter(rowPredicate));
     }
@@ -210,5 +214,12 @@ public class Matrix<T> {
     public enum Convolution {
         SHRINK_WITH_KERNEL,
         PRESERVE_SIZE
+    }
+
+    @Override
+    public String toString() {
+        return "Matrix{" +width()+"x"+height()
+                + rows +
+                '}';
     }
 }

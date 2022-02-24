@@ -28,6 +28,21 @@ public class Lists {
         return new JList<>(IntStream.range(0, endExclusive).boxed().toList());
     }
 
+    /**
+     * Like a for-loop but to be used functionally
+     */
+    public static JList<Integer> range(int startInclusive, int endExclusive, int update) {
+        List<Integer> integers = IntStream.of(1)
+                .mapMulti((dummy, c) -> {
+                    for (int i = startInclusive; i != endExclusive; i += update) {
+                        c.accept(i);
+                    }
+                })
+                .boxed()
+                .toList();
+        return new JList<>(integers);
+    }
+
     public static JList<Integer> rangeClosed(int endInclusive) {
         return new JList<>(IntStream.rangeClosed(0, endInclusive).boxed().toList());
     }

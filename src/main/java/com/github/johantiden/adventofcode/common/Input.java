@@ -11,12 +11,16 @@ public class Input {
     }
 
     @Nonnull
-    private static JList<String> split(String regex, String input) {
+    public static JList<String> split(String regex, String input) {
         return JList.of(input.split(regex));
     }
 
     public static JList<Integer> splitToInt(String regex, String string) {
         return split(regex, string)
                 .map(Integer::parseInt);
+    }
+
+    public static JList<String> splitComma(String input) {
+        return split(",", input);
     }
 }
