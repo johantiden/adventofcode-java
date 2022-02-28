@@ -9,6 +9,10 @@ import java.util.function.UnaryOperator;
 public record Matrix<T>(JList<JList<T>> rows) {
 
     public static <T> Matrix<T> blend(Matrix<T> a, Matrix<T> b, BinaryOperator<T> blender) {
+        if (a.width() != b.width() || a.height() != b.height()) {
+            throw new IllegalArgumentException("Matrix.blend requires matrices of the same size! \n\ta:"+ a+ "\n\tb:"+b);
+        }
+
         return a.allCoordinates()
                 .map(c -> blender.apply(a.get(c), b.get(c)));
     }
@@ -119,7 +123,7 @@ public record Matrix<T>(JList<JList<T>> rows) {
     }
 
     public Matrix<T> getColumns(JList<Integer> indices) {
-        return of(indices.map(this::getColumn));
+        return of(indices.map(this::getColumn)).transpose();
     }
 
     public Matrix<T> filterRows(Predicate<JList<T>> rowPredicate) {

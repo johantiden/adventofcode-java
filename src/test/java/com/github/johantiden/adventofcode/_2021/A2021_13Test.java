@@ -1036,7 +1036,7 @@ fold along y=6
 
     @Test
     public void a() {
-//        assertThat(A2021_13.a(EXAMPLE), is(17L));
+        assertThat(A2021_13.a(EXAMPLE), is(17L));
         assertThat(A2021_13.a(REAL), is(17L));
     }
 

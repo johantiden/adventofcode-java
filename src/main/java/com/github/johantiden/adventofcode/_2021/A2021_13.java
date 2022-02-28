@@ -48,15 +48,15 @@ public class A2021_13 {
     private static Matrix<Boolean> fold(Matrix<Boolean> canvas, Fold fold) {
         return switch (fold.dimension) {
             case UP -> fold(canvas::getRows, fold.index, canvas.height());
-            case LEFT -> fold(i -> canvas.getColumns(i).transpose(), fold.index, canvas.width());
+            case LEFT -> fold(canvas::getColumns, fold.index, canvas.width());
         };
     }
 
     private static Matrix<Boolean> fold(Function<JList<Integer>, Matrix<Boolean>> partGetter, int index, int dimensionSize) {
-        Matrix<Boolean> top = partGetter.apply(Lists.range(index));
-        Matrix<Boolean> bottomFlipped = partGetter.apply(Lists.range(dimensionSize-1, index, -1));
+        Matrix<Boolean> topOrLeft = partGetter.apply(Lists.range(index));
+        Matrix<Boolean> bottomOrRightFlipped = partGetter.apply(Lists.range(dimensionSize-1, index, -1));
 
-        return Matrix.blend(top, bottomFlipped, (a, b) -> a || b);
+        return Matrix.blend(topOrLeft, bottomOrRightFlipped, (a, b) -> a || b);
     }
 
 
